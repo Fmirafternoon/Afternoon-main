@@ -1,0 +1,20 @@
+<div class="flex justify-between lg:px-8 px-6 p-6 pb-0 mt-4">
+  <div class="grow flex-1 max-w-sm">
+    <h2 class="title-5 text-sm">
+      <%= title %>
+    </h2>
+    <% if hint.present? %>
+      <div class="hint">
+        <%= hint %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if actions.present? %>
+    <div>
+      <div class="flex items-center justify-end space-x-6">
+        <%= actions %>
+      </div>
+    </div>
+  <% end %>
+</div>

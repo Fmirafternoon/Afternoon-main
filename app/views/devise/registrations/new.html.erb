@@ -1,0 +1,46 @@
+<%= render SplitScreenComponent.new(image: image_path("header.webp")) do %>
+
+  <div class="mb-12">
+    <%= render LogoComponent.new %>
+  </div>
+
+  <div class="grow flex flex-col justify-center mx-auto max-w-sm">
+    <h2 class="title-3">
+      <%= t(".sign_up") %>
+    </h2>
+    <p class="mb-8 paragraph-md text-gray-500">
+      Cette inscription vous permet d'accéder au vivier de candidats de notre plateforme
+    </p>
+
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%# Honeypot anti-spam %>
+      <div style="position: absolute; left: -9999px;" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text"
+               name="website"
+               id="website"
+               tabindex="-1"
+               autocomplete="off"
+               data-1p-ignore
+               data-lpignore="true"
+               data-protonpass-ignore>
+      </div>
+
+      <%= f.input :email,
+                  required: true,
+                  autofocus: true ,
+                  input_html: { autocomplete: "email" }%>
+      <%= f.input :password,
+                  required: true,
+                  hint: (t('devise.shared.minimum_password_length', count: @minimum_password_length) if @minimum_password_length),
+                  input_html: { autocomplete: "new-password" } %>
+      <%= f.input :password_confirmation,
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
+
+      <%= f.button :submit, t(".sign_up"), class: "button-primary button-lg w-full" %>
+    <% end %>
+
+    <%= render "devise/shared/links" %>
+  </div>
+<% end %>

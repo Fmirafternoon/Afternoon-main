@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bundle exec rspec:*)",
+      "Bash(mkdir:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(bundle exec rails:*)",
+      "Bash(cat:*)",
+      "Bash(overmind restart:*)",
+      "Bash(bundle exec sidekiq:*)",
+      "Bash(curl:*)",
+      "Bash(psql:*)",
+      "Bash(afplay /System/Library/Sounds/Blow.aiff)"
+    ],
+    "deny": []
+  }
+}

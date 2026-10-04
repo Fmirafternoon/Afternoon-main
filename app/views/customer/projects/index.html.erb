@@ -1,0 +1,100 @@
+<div class="container mx-auto">
+
+<div class="flex justify-between items-center mb-6">
+  <h1 class="title-3">Mes projets de recrutement</h1>
+  <%= link_to customer_project_wizard_path("new", :step1), class: "button-primary" do %>
+    <%= inline_svg_tag "icons/plus.svg", class: "w-4" %>
+    Nouveau projet
+  <% end %>
+</div>
+
+<div class="button-group mb-6">
+  <%= active_link_to "Actifs (#{current_user.projects.not_archived.count})", customer_projects_path, class: "", active: { status: nil } %>
+  <%= active_link_to "Archivés (#{current_user.projects.archived.count})", customer_projects_path(status: 'archived'), class: "", active: { status: "archived" } %>
+</div>
+
+<% if @projects.any? %>
+  <div class="space-y-4">
+    <% @projects.each do |project| %>
+      <div class="card-secondary">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="label-sm"><%= project.title %></span>
+              <% case project.status %>
+              <% when "draft" %>
+                <%= render TagComponent.new(kind: :neutral) do %>Brouillon<% end %>
+              <% when "active" %>
+                <%= render TagComponent.new(kind: :success) do %>Actif<% end %>
+              <% when "archived" %>
+                <%= render TagComponent.new(kind: :neutral) do %>Archivé<% end %>
+              <% end %>
+              <%= render "customer/projects/broadcast_badge", project: project %>
+            </div>
+            <div class="paragraph-xs text-mute-700">
+              <%= [project.position_name, project.contract_type, project.start_date&.strftime("%B %Y")].compact.join(" - ") %>
+            </div>
+            <div class="paragraph-xs text-mute-500 mt-2">
+              Crée le <%= project.created_at.strftime("%d/%m/%Y") %>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <%= link_to "Voir le projet", customer_project_path(project), class: "button-primary" %>
+            <%= render DropdownComponent.new do |dropdown| %>
+              <%= dropdown.with_trigger(classes: "button-secondary") do %>
+                <%= inline_svg_tag "icons/ellipsis-vertical.svg", class: "w-4" %>
+              <% end %>
+              <%= dropdown.with_body do %>
+                <%= link_to duplicate_customer_project_path(project),
+                    data: { turbo_method: :post },
+                    class: "link-dropdown" do %>
+                  Dupliquer
+                <% end %>
+                <%= dropdown.with_separator %>
+                <% if project.archived? %>
+                  <%= link_to  unarchive_customer_project_path(project),
+                      data: { turbo_method: :post },
+                      class: "link-dropdown" do %>
+                    Désarchiver
+                  <% end %>
+                  
+                <% else %>
+                  <%= link_to  archive_customer_project_path(project),
+                      data: { turbo_method: :post },
+                      class: "link-dropdown" do %>
+                    Archiver
+                  <% end %>
+
+                <% end %>
+
+
+
+
+                <%= dropdown.with_separator %>
+                <%= link_to customer_project_path(project),
+                    data: {
+                      turbo_method: :delete,
+                      turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce projet ?"
+                    },
+                    class: "link-dropdown text-danger" do %>
+                  Supprimer
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
+<% else %>
+  <div class="text-center py-16 text-mute-700">
+    <p>Aucun projet pour le moment.</p>
+    <%= link_to "Créer mon premier projet", customer_project_wizard_path("new", :step1), class: "button-primary mt-4" %>
+  </div>
+<% end %>
+
+</div>

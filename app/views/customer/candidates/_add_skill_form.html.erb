@@ -1,0 +1,28 @@
+<%= form_with url: customer_candidates_path, method: :get, html: { class: "flex gap-2" } do |skill_form| %>
+  <!-- Préserver tous les paramètres existants sauf new_skill -->
+  <%= hidden_field_tag "customer_search_form[query]", search_form.query if search_form.query.present? %>
+  <%= hidden_field_tag "customer_search_form[autocomplete_address]", search_form.autocomplete_address if search_form.autocomplete_address.present? %>
+  <%= hidden_field_tag "customer_search_form[lat]", search_form.lat if search_form.lat.present? %>
+  <%= hidden_field_tag "customer_search_form[lng]", search_form.lng if search_form.lng.present? %>
+  <%= hidden_field_tag "customer_search_form[zip_code]", search_form.zip_code if search_form.zip_code.present? %>
+  <%= hidden_field_tag "customer_search_form[city]", search_form.city if search_form.city.present? %>
+  
+  <% search_form.sector_ids.each do |sector_id| %>
+    <%= hidden_field_tag "customer_search_form[sector_ids][]", sector_id %>
+  <% end %>
+  
+  <% search_form.skills.each do |skill| %>
+    <%= hidden_field_tag "customer_search_form[skills][]", skill %>
+  <% end %>
+  
+  <% if defined?(saved_search_id) && saved_search_id.present? %>
+    <%= hidden_field_tag "saved_search_id", saved_search_id %>
+  <% end %>
+  <div class="flex gap-x-2">
+    <%= text_field_tag "customer_search_form[new_skill]",
+                       nil,
+                       placeholder: "Ajouter une compétence...",
+                       class: "block rounded-lg px-3 pb-3 pt-3 w-full text-sm text-gray-900 bg-white border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-[#DBE204] shadow-[0 0 4px 0] focus:shadow-brand" %>
+    <%= submit_tag "Ajouter", class: "button-ghost" %>
+  </div>
+<% end %>

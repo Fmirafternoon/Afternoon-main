@@ -1,0 +1,70 @@
+<div data-controller="mobile-menu">
+  <div class="m-4.5 mb-10 flex justify-between items-center rounded-3xl bg-mute-200 px-4 lg:px-6 py-2">
+
+    <div class="flex items-center gap-8">
+      <%= render LogoComponent.new %>
+
+      <nav class="hidden lg:flex items-center gap-6">
+        <%= link_to customer_projects_path, class: "link-navigation #{controller_path.start_with?('customer/projects') ? 'underline underline-offset-4' : ''}" do %>
+          Mes projets
+        <% end %>
+        <%= link_to customer_candidates_path, class: "link-navigation #{controller_path == 'customer/candidates' ? 'underline underline-offset-4' : ''}" do %>
+          Recherche
+        <% end %>
+      </nav>
+    </div>
+
+    <!-- Mobile menu button -->
+    <button data-action="mobile-menu#toggle" type="button" class="lg:hidden inline-flex items-center p-2 w-10 h-10 button-ghost" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Ouvrir le menu</span>
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+      </svg>
+    </button>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <%= render DropdownComponent.new do |dropdown| %>
+        <%= dropdown.with_trigger(classes: "button-link button-md") do %>
+          <span>Mon compte</span>
+          <%= inline_svg_tag("icons/arrow-down.svg") %>
+        <% end %>
+        <%= dropdown.with_body do %>
+          <% if user_signed_in? %>
+            <%= link_to "Mes informations", customer_onboarding_path(:personal_info), class: "link-dropdown" %>
+            <%= link_to "Deconnexion", destroy_user_session_path, data: { turbo_method: :delete }, class: "link-dropdown" %>
+          <% else %>
+            <%= link_to "Me connecter", new_user_session_path, target: "_top", class: "link-dropdown" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% if user_signed_in? && current_user.customer? %>
+        <%= link_to customer_basket_path, class: "h-12 w-12 bg-black hover:bg-neutral-800 p-3 rounded-full transition-colors relative inline-flex items-center justify-center", id: "basket-link" do %>
+          <%= inline_svg_tag("icons/podium.svg", class: "w-6 h-6 text-white") %>
+          <%= render "customer/baskets/count", count: current_basket.pending_candidates_count %>
+        <% end %>
+      <% end %>
+    </div>
+
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="lg:hidden m-4.5 -mt-8 mb-6 rounded-2xl bg-mute-200 p-4 hidden" id="navbar-menu" data-mobile-menu-target="menu">
+    <nav class="flex flex-col gap-3">
+      <%= link_to customer_projects_path, class: "link-navigation #{controller_path.start_with?('customer/projects') ? 'font-bold' : ''}" do %>
+        Mes projets
+      <% end %>
+      <%= link_to customer_candidates_path, class: "link-navigation #{controller_path == 'customer/candidates' ? 'font-bold' : ''}" do %>
+        Recherche
+      <% end %>
+      <hr class="border-mute-400">
+      <% if user_signed_in? %>
+        <%= link_to "Mes informations", customer_onboarding_path(:personal_info), class: "link-navigation" %>
+        <%= link_to "Ma shortlist", customer_basket_path, class: "link-navigation" %>
+        <%= link_to "Deconnexion", destroy_user_session_path, data: { turbo_method: :delete }, class: "link-navigation text-red-600" %>
+      <% else %>
+        <%= link_to "Me connecter", new_user_session_path, class: "link-navigation" %>
+      <% end %>
+    </nav>
+  </div>
+</div>

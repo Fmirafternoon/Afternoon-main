@@ -1,0 +1,179 @@
+<div class="container mx-auto">
+
+<div class="mb-4">
+  <%= link_to customer_projects_path, class: "button-link button-md" do %>
+    <%= inline_svg_tag "icons/arrow-left.svg", class: "w-4 sm:w-5" %>
+    Retour aux projets
+  <% end %>
+</div>
+
+<div class="flex justify-between items-start mb-6">
+  <div>
+    <h1 class="title-3"><%= @project.title %></h1>
+    <p class="paragraph-sm text-mute-700"><%= @counts[:all] %> profil(s) proposé(s)</p>
+  </div>
+  <% if @project.saved_search.present? %>
+    <%= link_to "Chercher des candidats", customer_candidates_path(@project.saved_search.criteria), class: "button-secondary" %>
+  <% end %>
+  <% if @project.active? %>
+    <%= link_to "Modifier le projet", customer_project_wizard_path(@project, :step1), class: "button-secondary" %>
+  <% elsif @project.draft? %>
+    <%= link_to "Reprendre", customer_project_wizard_path(@project, :step1), class: "button-primary" %>
+  <% end %>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+  <div class="lg:col-span-2">
+    <div class="button-group mb-4">
+      <%= active_link_to "Tous (#{@counts[:all]})", customer_project_path(@project), class: "", active: { filter: nil } %>
+      <%= active_link_to "Nouveaux (#{@counts[:new]})", customer_project_path(@project, filter: 'new'), class: "", active: { filter: "new" } %>
+      <%= active_link_to "Intérêts (#{@counts[:interested]})", customer_project_path(@project, filter: 'interested'), class: "", active: { filter: "interested" } %>
+    </div>
+
+    <% if @project_candidates.any? %>
+      <div class="space-y-4">
+        <% @project_candidates.each do |pc| %>
+          <div class="card-secondary <%= pc.interested? ? 'border-success-500' : '' %>">
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-full bg-mute-300 flex items-center justify-center text-mute-800 font-bold">
+                <%= pc.initials %>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="label-sm">Candidat <%= pc.anonymized_number %></span>
+                  <% if pc.viewed_at.nil? %>
+                    <%= render TagComponent.new(kind: :black) do %>Nouveau<% end %>
+                  <% elsif pc.interested? %>
+                    <%= render TagComponent.new(kind: :success) do %>Intérêt<% end %>
+                  <% elsif pc.rejected? %>
+                    <%= render TagComponent.new() do %>Rejeté<% end %>
+                  <% end %>
+                </div>
+                <div class="paragraph-xs text-mute-700 mb-2">
+                  <%= pc.candidate.total_experience_in_years || "?" %> ans d'expérience
+                  <% if pc.candidate.position.present? %>
+                    - <%= pc.candidate.position %>
+                  <% end %>
+                  <% if pc.candidate.availability_notice.present? %>
+                    - <%= Candidate.human_enum_name(:availability_notice, pc.candidate.availability_notice) %>
+                  <% end %>
+                </div>
+
+                <% if pc.summary.present? %>
+                  <div class="bg-mute-100 p-2 rounded-lg paragraph-xs mb-2 prose prose-sm">
+                    <%= sanitize md_to_html(pc.summary) %>
+                  </div>
+                <% end %>
+
+                <% if pc.interested? %>
+                  <div class="paragraph-xs text-mute-700 mb-2">
+                    Vous avez exprimé votre intérêt le <%= pc.interest_expressed_at&.strftime("%d/%m") %>
+                  </div>
+                <% end %>
+                <div class="flex gap-2 mt-3">
+                  <%= link_to "Voir le profil", customer_project_candidate_path(@project, pc), class: "button-primary hide-link-icon" %>
+                  <%= link_to "Télécharger PDF", pdf_customer_project_candidate_path(@project, pc), class: "button-secondary", target: "_blank" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-16 text-mute-700">
+        <p>Aucun candidat proposé pour le moment.</p>
+        <p class="paragraph-xs mt-2">Nous vous proposerons des profils correspondant à vos critères.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <div class="card-secondary sticky top-4">
+      <h2 class="label-md mb-4">Détails du projet</h2>
+      <div class="space-y-3 paragraph-xs">
+        <div>
+          <strong>Intitulé:</strong><br>
+          <%= @project.position_name || @project.title %>
+        </div>
+        <div>
+          <strong>Contrat:</strong><br>
+          <%= @project.contract_type || "-" %>
+        </div>
+        <div>
+          <strong>Lieu:</strong><br>
+          <%= @project.location&.city || "-" %>
+        </div>
+        <div>
+          <strong>Date de début:</strong><br>
+          <%= @project.start_date ? l(@project.start_date, format: :short) : "-" %>
+        </div>
+        <% if @project.skills.any? %>
+          <div>
+            <strong>Compétences:</strong><br>
+            <div class="flex flex-wrap gap-1 mt-1">
+              <% @project.skills.each do |skill| %>
+                <%= render TagComponent.new do %><%= skill.name %><% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <div>
+          <strong>Expérience min:</strong><br>
+          <%= @project.min_experience_years ? "#{@project.min_experience_years}+ ans" : "-" %>
+        </div>
+        <div>
+          <strong>Niveau d'études:</strong><br>
+          <%= @project.education_level || "-" %>
+        </div>
+        <% if @project.languages.present? && @project.languages.any? %>
+          <div>
+            <strong>Langues :</strong><br>
+            <%= @project.languages.join(", ") %>
+          </div>
+        <% end %>
+        <div>
+          <strong>Salaire cible:</strong><br>
+          <%= @project.target_salary ? number_to_currency(@project.target_salary, unit: "EUR", format: "%n %u", precision: 0) : "-" %>
+        </div>
+        <div>
+          <strong>Disponibilité:</strong><br>
+          <%= @project.desired_availability ? t("enums.project.desired_availability.#{@project.desired_availability}") : "-" %>
+        </div>
+        <% if @project.description.present? %>
+          <div>
+            <strong>Description :</strong><br>
+            <p class="text-mute-700"><%= truncate(@project.description, length: 200) %></p>
+          </div>
+        <% end %>
+        <div>
+          <strong>Diffusion aux agences :</strong><br>
+          <div class="mt-1">
+            <%= render "customer/projects/broadcast_badge", project: @project %>
+          </div>
+          <% if @project.active? && @project.broadcast_enabled? %>
+            <div class="mt-2">
+              <% if @project.broadcastable? %>
+                <%= link_to "Renvoyer aux agences",
+                    rebroadcast_customer_project_path(@project),
+                    data: {
+                      turbo_method: :post,
+                      turbo_confirm: "Renvoyer le projet aux agences à proximité ?"
+                    },
+                    class: "button-secondary" %>
+              <% elsif @project.next_broadcast_available_at.present? %>
+                <span class="text-mute-500">
+                  Prochain envoi possible le <%= @project.next_broadcast_available_at.strftime("%d/%m/%Y") %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t paragraph-xs text-mute-500">
+        Créé le <%= @project.created_at.strftime("%d/%m/%Y") %>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

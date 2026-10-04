@@ -1,0 +1,73 @@
+<div class="flex flex-col gap-y-4" id="<%= dom_id(candidate, :publication_block) %>">
+  <div class="flex items-center gap-x-2">
+    <%= render Candidate::PublicationStatusComponent.new(candidate) %>
+    <% if candidate.archived? %>
+      <%= render TagComponent.new(kind: :danger) do %>
+        Archivé
+      <% end %>
+    <% end %>
+  </div>
+  <div class="flex flex-col gap-y-4">
+    <% if candidate.archived? %>
+      <p class="paragraph-sm text-mute-900">
+        <div>
+          Le candidat est archivé, vous pouvez le restaurer en cliquant sur le bouton ci-dessous.
+        </div>
+        <%= link_to "Restaurer le candidat", restore_agent_candidate_path(candidate), data: { turbo_method: :patch }, class: "w-full button-ghost" %>
+      </p>
+    <% else %>
+      <% if candidate.import_completed? || candidate.import_status.blank? %>
+        <% if candidate.draft? %>
+          <% if candidate.publishable? %>
+            <%= simple_form_for candidate, url: publish_agent_candidate_path(candidate), method: :post do |f| %>
+              <%= f.submit 'Publier le profil', class: "button-primary w-full" %>
+            <% end %>
+          <% else %>
+            <%= simple_form_for candidate, url: publish_agent_candidate_path(candidate), method: :post do |f| %>
+              <%= f.submit 'Publier le profil', disabled: true, class: "button-primary w-full" %>
+            <% end %>
+            <p class="paragraph-sm text-mute-900">
+              ⚠️ Le profil nécessite certaines informations complémentaires pour pouvoir être publié :
+            </p>
+          <% end %>
+        <% elsif candidate.pending? %>
+          <div class="flex space-x-2 items-center">
+            <div class="self-center relative w-5 h-5">
+              <%= inline_svg_tag("icons/spinner.svg").html_safe %>
+            </div>
+            <p class="paragraph-sm text-mute-900">
+              Le profil est en cours d'analyse...
+            </p>
+          </div>
+        <% elsif candidate.published? %>
+          <p class="paragraph-sm text-mute-900">
+            Le profil est publié et visible par les utilisateurs.
+          </p>
+        <% end %>
+        <%= render Candidate::CompletionDonutComponent.new(candidate: candidate) %>
+        <%= render Candidate::ValidationCounterComponent.new(candidate: candidate) %>
+      <% else %>
+        <div class="flex space-x-2 items-center">
+          <div class="self-center relative w-5 h-5">
+            <%= inline_svg_tag("icons/spinner.svg").html_safe %>
+          </div>
+          <p class="paragraph-sm text-mute-900">
+            Le profil est en cours d'analyse...
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <hr class="border-mute-400">
+  <div>
+    <% if candidate.recruitment_commission.present? %>
+      <p class="label-lg"><%= number_to_currency candidate.recruitment_commission, precision: 0 %> HT</p>
+      <p class="paragraph-xs">Prime demandée</p>
+    <% else %>
+      <div class="flex justify-between">
+        <p class="paragraph-md">Prime non définie</p>
+        <%= link_to 'Modifier', agent_candidate_wizard_path(candidate, :comission), class: "button-ghost button-xs" %>
+      </div>
+    <% end %>
+  </div>
+</div>

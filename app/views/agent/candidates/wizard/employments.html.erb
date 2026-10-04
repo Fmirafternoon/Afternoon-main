@@ -1,0 +1,103 @@
+<%= simple_form_for @form, url: agent_candidate_wizard_path(@candidate, step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Construire le profil du candidat",
+    cancel_path: agent_candidate_path(@candidate),
+    current_step: step,
+    previous_path: previous_wizard_path,
+    wizard_steps: wizard_steps,
+    show_finish: true
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :candidate,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path,
+    show_finish: true
+  ) do |step_component| %>
+
+    <% step_component.with_breadcrumb(
+      wizard: :candidate,
+      wizard_steps: wizard_steps,
+      current_step: step,
+      description: "Vérifiez et complétez les informations du candidat. Seul les profils 100% complétés seront proposés.",
+      step_path: ->(step) { step_path(step) },
+      step_accessible: ->(step) { step_accessible?(step) }
+    ) %>
+
+      <% if @form.errors.has_key?(:base) %>
+        <div class="col-span-2 notice-important mb-2">
+          <%= @form.errors.messages_for(:base).join(', ') %>
+        </div>
+      <% end %>
+      <div class="col-span-2">
+        <%= f.input :title %>
+      </div>
+
+      <%= f.input :company %>
+      <%= f.input :location %>
+      <%= f.input :sector %>
+
+      <div class="col-span-2">
+        <%= f.input :description, as: :text, input_html: { data: { controller: "autogrow" } } %>
+      </div>
+      <%= f.input :from_date,
+                  label: "Date de début",
+                  placeholder: "MM/AAAA",
+                  input_html: {
+                    data: {
+                      controller: "imask",
+                      imask_type_value: "month-year"
+                    }
+                  },
+                  hint: "Format: MM/AAAA" %>
+
+      <%= f.input :to_date,
+                  label: "Date de fin",
+                  placeholder: "MM/AAAA",
+                  input_html: {
+                    data: {
+                      controller: "imask",
+                      imask_type_value: "month-year"
+                    }
+                  },
+                  hint: "Format: MM/AAAA" %>
+
+      <div class="col-span-2">
+        <%= button_tag "Ajouter l'expérience pro", type: "submit", name: "commit", value: "add_employment", class: "w-full button-ghost button-xl" %>
+      </div>
+
+      <div class="col-span-2 mt-6">
+        <h3 class="title-5 text-mute-800 mb-2">Éxpériences</h3>
+        <% if @candidate.employments.any? %>
+          <div class="flex flex-col gap-4">
+          <% @candidate.employments.each do |employment| %>
+            <div class="flex justify-between items-start bg-gray-100 rounded-xl px-6 py-4">
+              <div class="mr-1">
+                <h3 class="title-5"><%= employment.title %></h3>
+                <p class="paragraph-sm text-mute-900">
+                  à <%= employment.company %> <span class="italic text-xs">(<%= employment.sector %>)</span> •
+                  <%= employment.location %>
+                </p>
+                <div>
+                  <% if employment.from_date.present? && employment.to_date.present? %>
+                    de <%= employment.from_date %>
+                    à <%= employment.to_date %>
+                  <% end %>
+                </div>
+                <p class="paragraph mt-2 "><%= simple_format employment.description %></p>
+
+              </div>
+              <%= link_to "&times;".html_safe,
+                  agent_candidate_employment_path(employment),
+                  data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette expérience ?" },
+                  class: "text-red-500 text-xl" %>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-gray-500">Aucune expérience professionnelle ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+  <% end %>
+<% end %>

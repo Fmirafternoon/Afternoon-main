@@ -1,0 +1,33 @@
+Publication arrivant à expiration
+
+Bonjour <%= @agent.first_name %>,
+
+La publication du candidat <%= @candidate.full_name %> (<%= @candidate.position %>) arrive à expiration dans <%= @days_until_expiration %> jour<%= 's' if @days_until_expiration > 1 %>.
+
+⚠️ ACTION REQUISE
+
+Si vous ne faites rien, ce candidat sera automatiquement dépublié dans <%= @days_until_expiration %> jour<%= 's' if @days_until_expiration > 1 %>.
+
+---
+
+Candidat : <%= @candidate.full_name %>
+Poste : <%= @candidate.position %>
+Publié le : <%= l(@candidate.published_at, format: :long) %>
+
+---
+
+Que souhaitez-vous faire ?
+
+PROLONGER DE 14 JOURS :
+<%= @extend_url %>
+
+DÉPUBLIER MAINTENANT :
+<%= @unpublish_url %>
+
+---
+
+💡 Astuce : Prolonger la publication vous donne 14 jours supplémentaires pour trouver le bon client pour ce candidat.
+
+---
+
+Si vous avez des questions, n'hésitez pas à nous contacter : <%= ENV.fetch('EMAIL_SENDER') %>

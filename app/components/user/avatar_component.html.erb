@@ -1,0 +1,7 @@
+<% if user.avatar_url.present? %>
+  <%= image_tag user.avatar_url, class: "#{size_classes} rounded-full" %>
+<% else %>
+  <div class="text-white text-center rounded-full bg-black flex items-center justify-center <%= size_classes %>">
+    <%= initials %>
+  </div>
+<% end %>

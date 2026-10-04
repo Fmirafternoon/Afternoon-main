@@ -1,0 +1,60 @@
+<div id="basket_item_<%= basket_item.id %>">
+  <div class="border-b border-mute-300 mb-6 py-3.5">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-x-4.5">
+        <%= render User::AvatarComponent.new(user: basket_item.agent, size: :sm) %>
+        <div class="paragraph-sm text-mute-900">
+          <%= basket_item.candidates.count %> <%= "candidat".pluralize(basket_item.candidates.count) %>
+          <%= "qualifié".pluralize(basket_item.candidates.count) %> par
+          <%= basket_item.agent.first_name %> <%= basket_item.agent.last_name.first %>.
+        </div>
+      </div>
+
+      <% if basket_item.status_pending? %>
+        <%= link_to customer_basket_request_meeting_path(id: basket_item.id),
+                    data: { turbo_frame: "modal" },
+                    class: "button-secondary button-sm" do %>
+          Prendre RDV
+        <% end %>
+      <% elsif basket_item.status_meeting_requested? %>
+        <span class="inline-flex items-center gap-x-2">
+          <%= inline_svg_tag "icons/check.svg", class: "w-4 h-4" %>
+          RDV pris !
+        </span>
+
+      <% elsif basket_item.status_meeting_scheduled? %>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+          RDV confirmé
+        </span>
+      <% end %>
+    </div>
+
+
+
+  </div>
+
+  <div>
+    <!-- Liste des candidats -->
+    <div class="space-y-3 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% basket_item.candidates.each do |candidate| %>
+          <div>
+            <div class="relative" id="basket_candidate_<%= candidate.id %>">
+              <%= render Candidate::CardComponent.new(candidate: candidate, readonly: true, basket: nil) %>
+            </div>
+            <% if basket_item.status_pending? %>
+              <div class="text-right">
+                <%= button_to customer_basket_remove_candidate_path(basket_item_id: basket_item.id, candidate_id: candidate.id),
+                              method: :delete,
+                              data: { turbo: true, turbo_confirm: "Retirer ce candidat de la shortlist ?" },
+                              class: "cursor-pointer hover:underline text-mute-700 text-xs mt-2" do %>
+                  Supprimer
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

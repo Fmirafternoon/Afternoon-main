@@ -1,0 +1,54 @@
+<div class="m-4.5 mb-10 flex justify-between items-center rounded-3xl bg-mute-200 ">
+  <div class="px-6 flex grow justify-between items-center relative py-4" data-controller="dropdown" data-dropdown-hidden-class="hidden">
+
+    <div class="lg:mr-8">
+      <%= render LogoComponent.new %>
+    </div>
+
+    <!-- Mobile menu button -->
+    <button data-action="dropdown#toggle" data-dropdown-target="button" type="button" class="lg:hidden inline-flex items-center p-2 w-10 h-10 button-ghost" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Ouvrir le menu</span>
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+      </svg>
+    </button>
+
+    <!-- Navigation menu -->
+    <div class="grow hidden z-30 bg-mute-200 p-4 pt-4 lg:p-0 -mt-4 lg:mt-0 rounded-b-3xl shadow-lg lg:shadow-none lg:rounded-b-none absolute top-full left-0 lg:relative w-full lg:flex lg:w-auto lg:items-center lg:space-x-10" id="navbar-menu" data-dropdown-target="menu">
+      <div class="flex w-full flex-col lg:flex-row lg:justify-between gap-4">
+        <div class="flex flex-col lg:flex-row gap-4">
+          <% if current_user.agent? %>
+            <%= link_to "Candidats", agent_candidates_path, class: "button-link button-md" %>
+            <%= link_to "Projets", agent_projects_path, class: "button-link button-md" %>
+          <% end %>
+          <% if current_user.agent_manager? %>
+            <%= link_to "Mon cabinet", agent_users_path, class: "button-link button-md" %>
+          <% end %>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-4">
+          <%= render DropdownComponent.new do |dropdown| %>
+            <%= dropdown.with_trigger(classes: "button-link button-md") do %>
+              <span>
+                Mon compte
+              </span>
+              <%= inline_svg_tag("icons/arrow-down.svg") %>
+            <% end %>
+            <%= dropdown.with_body do %>
+              <% if user_signed_in? %>
+                <%= link_to "Mes informations", agent_onboarding_path(:personal_info), class: "link-dropdown" %>
+                <%= link_to "Déconnexion", destroy_user_session_path, data: { turbo_method: :delete }, class: "link-dropdown" %>
+              <% else %>
+                <%= link_to "Me connecter", new_user_session_path, target: "_top", class: "link-dropdown" %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <%= link_to agent_candidate_wizard_path(:personal_info), class: "button-primary button-md" do %>
+            <%= inline_svg_tag "icons/plus.svg", class: "w-5" %>
+            Ajouter candidats
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

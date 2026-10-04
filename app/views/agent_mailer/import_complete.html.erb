@@ -1,0 +1,28 @@
+<h2 style="margin: 0 0 20px; color: #092E46; font-size: 20px; font-weight: 600;">
+  Import terminé
+</h2>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Bonjour <%= @user.first_name %>,
+</p>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Votre import de CV est terminé. Voici la liste des candidats extraits :
+</p>
+
+<ul style="margin: 0 0 24px; padding-left: 20px; color: #333; font-size: 14px;">
+  <% @candidates.each do |candidate| %>
+    <li style="margin: 8px 0;"><%= candidate.resume_file_name %></li>
+  <% end %>
+</ul>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
+  <tr>
+    <td align="center">
+      <a href="<%= agent_candidates_url %>"
+         style="display: inline-block; background-color: #E5E500; color: #092E46; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+        Voir mes candidats
+      </a>
+    </td>
+  </tr>
+</table>

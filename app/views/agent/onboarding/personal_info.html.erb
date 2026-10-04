@@ -1,0 +1,60 @@
+<%= simple_form_for @form, url: agent_onboarding_path(step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Bienvenue à bord !",
+    current_step: step,
+    wizard_steps: wizard_steps,
+    cancel_path: current_user.agent_onboarded? ? agent_root_path : nil
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :agent_onboarding,
+    wizard_steps: wizard_steps,
+    current_step: step,
+  ) do |step_component| %>
+    <%
+      step_component.with_breadcrumb(
+        wizard: :agent_onboarding,
+        wizard_steps:,
+        current_step: step,
+        description: "Nous avons besoin de quelques informations pour finaliser votre profil d'agent.",
+      )
+    %>
+    <div>
+      <%= f.input :first_name, required: true %>
+    </div>
+    <div>
+      <%= f.input :last_name, required: true %>
+    </div>
+
+    <div class="mt-6">
+      <%= f.input :phone_number %>
+    </div>
+    <div></div>
+
+    <div class="mt-6">
+      <%= f.input :avatar_url, as: :avatar, input_html: { accept: "image/*" } %>
+    </div>
+    <div></div>
+
+    <div class="col-span-2 mt-6">
+      <%=
+        f.input :description,
+          as: :text,
+          label: "Description",
+          hint: "Décrivez-vous en quelques mots pour que les clients puissent vous connaître.",
+          wrapper_html: {
+            class: "grow-wrap"
+          },
+          input_html: {
+            rows: 4,
+            data: {
+              controller: 'autogrow character-counter',
+              'character-counter-max-value': 150
+            }
+          }
+          %>
+    </div>
+
+  <% end %>
+<% end %>

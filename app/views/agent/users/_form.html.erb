@@ -1,0 +1,37 @@
+<div class="flex-1">
+  <%= simple_form_for @user, url: url do |f| %>
+    <%= render Card::ContainerComponent.new do |container| %>
+      <div class="flex lg:space-x-4  flex-col-reverse lg:flex-row items-start">
+        <div data-controller="conditional-visibility" class="w-full space-y-4">
+          <%= container.with_card do |card| %>
+            <%= card.with_body do %>
+              <div class="flex gap-x-2">
+                <%= f.input :first_name %>
+                <%= f.input :last_name %>
+              </div>
+              <%= f.input :email %>
+
+              <%=
+                f.input :role, as: :select,
+                  collection: User.roles.select { |key, _| User::AGENT_ROLES.include?(key) },
+                  wrapper_html: { class: "w-1/2"},
+                  label_method: -> (obj) { t("activerecord.attributes.user.roles.#{obj.first}") },
+                  value_method: -> (obj) { obj.first }, include_blank: false,
+                  input_html: {
+                    data: {
+                      action: "conditional-visibility#click"
+                    }
+                  }
+              %>
+
+            <% end %>
+            <%= card.with_actions do %>
+              <%= card.with_cancel %>
+              <%= f.button :submit %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,23 @@
+<div class=" <%= classes %> max-w-2xl">
+  <% if header.present? %>
+    <div class="rounded-t-xl overflow-hidden">
+      <%= header %>
+    </div>
+  <%end %>
+  <% if title.present? %>
+    <h1 class="title px-6 py-6">
+      <%= title %>
+    </h1>
+  <% end %>
+  <% bodies.reject { |body| body.to_s.blank? }.each do |body| %>
+    <div class="space-y-4 <%= body_classes %>">
+      <div class="<%= "px-6 lg:px-8 py-4" unless no_padding %>">
+        <%= body %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if actions.present? %>
+    <%= actions %>
+  <% end %>
+</div>

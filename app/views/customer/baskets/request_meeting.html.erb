@@ -1,0 +1,50 @@
+<turbo-frame id="modal">
+  <div class="modal-content max-w-2xl mx-auto bg-white rounded-2xl p-6">
+    <h2 class="title-3 mb-4">Prendre rendez-vous</h2>
+
+    <div class="mb-6 p-4 bg-mute-200 rounded-2xl">
+      <div class="flex items-center gap-x-4.5">
+      <%= render User::AvatarComponent.new(user: @basket_item.agent, size: :sm) %>
+      <div>
+        <p class="paragraph-md font-semibold">
+          Avec <%= @basket_item.agent.full_name %>
+        </p>
+        <p class="paragraph-sm text-mute-800">
+          à propos de <%= @basket_item.candidates.count %> <span class="font-semibold"><%= "candidat".pluralize(@basket_item.candidates.count) %></span>
+        </p>
+      </div>
+      </div>
+    </div>
+
+    <%= form_with url: customer_basket_send_meeting_request_path(id: @basket_item.id),
+                  method: :post,
+                  data: { turbo: true },
+                  class: "space-y-4" do |f| %>
+
+      <div>
+        <%= f.label :meeting_date, "Date et heure proposées", class: "block paragraph-sm font-semibold text-mute-900 mb-2" %>
+        <%= f.datetime_field :meeting_date,
+                             value: 1.day.from_now.change(hour: 10, min: 0).strftime("%Y-%m-%dT%H:%M"),
+                             min: Time.current.strftime("%Y-%m-%dT%H:%M"),
+                             required: true,
+                             class: "w-full px-4 py-2 border border-mute-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+        <p class="text-xs text-mute-600 mt-1">Proposez une date et heure pour le rendez-vous. L'agent pourra confirmer ou proposer un autre créneau.</p>
+      </div>
+
+      <div>
+        <%= f.label :customer_message, "Message personnalisé (optionnel)", class: "block paragraph-sm font-semibold text-mute-900 mb-2" %>
+        <%= f.text_area :customer_message,
+                         rows: 4,
+                         placeholder: "Ex: Je souhaite discuter de ces profils pour le poste de...",
+                         class: "w-full px-4 py-2 border border-mute-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+
+      <div class="flex gap-3 justify-end mt-6">
+        <%= link_to "Annuler", "#",
+                    data: { action: "click->modal#close" },
+                    class: "button-ghost button-md" %>
+        <%= f.submit "Envoyer la demande", class: "button-primary button-md" %>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>

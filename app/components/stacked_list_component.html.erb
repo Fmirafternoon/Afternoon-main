@@ -1,0 +1,7 @@
+<ul role="list" class="<%= wrapper_classes %> divide-y divide-gray-100 overflow-hidden bg-white ring-1 shadow-xs ring-gray-900/5 sm:rounded-xl">
+  <% items.reject { |item| item.to_s.blank? }.each do |item| %>
+    <li class="relative flex justify-between gap-x-6 px-2 py-3 hover:bg-gray-50 sm:px-6">
+      <%= item %>
+    </li>
+  <% end %>
+</ul>

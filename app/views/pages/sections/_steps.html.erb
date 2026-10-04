@@ -1,0 +1,110 @@
+<div class="bg-white" data-controller="steps-carousel" data-steps-carousel-active-class="bg-primary" data-steps-carousel-inactive-class="bg-mute-300">
+  <div class="pt-10 relative px-3 md:px-6">
+
+    <div class="bg-white mx-3 pt-8 z-10 relative max-w-7xl mx-auto rounded-3xl bg-white">
+
+      <div class="px-3 md:px-6 px-4 lg:px-20 py-0">
+        <h5 class="title-5 text-mute-800">
+          Rapide, fluide et efficace
+        </h5>
+
+        <h1 class="mt-3 mb-14 title-1">
+          Recrutez en <br> 3 étapes simples
+        </h1>
+
+        <div class="hidden md:grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-4">
+          <button data-steps-carousel-target="button" data-action="click->steps-carousel#activate" data-index="0" data-active-class="bg-primary" class="font-semibold bg-primary rounded-lg text-center py-2 cursor-pointer transition-all duration-300">Créer votre compte</button>
+          <button data-steps-carousel-target="button" data-action="click->steps-carousel#activate" data-index="1" data-active-class="bg-peach" class="font-semibold bg-mute-300 rounded-lg text-center py-2 cursor-pointer transition-all duration-300">Sélectionnez vos candidats</button>
+          <button data-steps-carousel-target="button" data-action="click->steps-carousel#activate" data-index="2" data-active-class="bg-mint" class="font-semibold bg-mute-300 rounded-lg text-center py-2 cursor-pointer transition-all duration-300">Rencontrez-les et embauchez</button>
+        </div>
+      </div>
+
+    </div>
+    <%= inline_svg_tag "rounded-bg.svg", class: "text-mute-400 z-0 absolute top-0 md:-top-30 left-0 right-0" %>
+  </div>
+  <!-- Carousel with magnetic scroll snap and peek of next/prev cards -->
+  <!-- Dots for mobile -->
+  <div class="flex justify-center mt-4 md:hidden space-x-2">
+    <button data-steps-carousel-target="dot" data-action="click->steps-carousel#activate" data-index="0" class="w-2.5 h-2.5 rounded-full bg-primary-500"></button>
+    <button data-steps-carousel-target="dot" data-action="click->steps-carousel#activate" data-index="1" class="w-2.5 h-2.5 rounded-full bg-mute-300"></button>
+    <button data-steps-carousel-target="dot" data-action="click->steps-carousel#activate" data-index="2" class="w-2.5 h-2.5 rounded-full bg-mute-300"></button>
+  </div>
+  <div class="relative mt-4 md:mt-10 overflow-hidden">
+    <div class="hidden lg:block  absolute top-0 left-0 bottom-0 z-10 w-[10%] bg-linear-to-r from-white to-transparent">
+    </div>
+    <div class="hidden lg:block  absolute top-0 right-0 bottom-0 z-10 w-[10%]  bg-linear-to-l from-white to-transparent">
+    </div>
+    <div data-steps-carousel-target="wrapper"
+        class="flex overflow-x-auto items-stretch
+              snap-x snap-mandatory
+              scrollbar-hide">
+
+      <div data-steps-carousel-target="content"
+            data-index="0"
+            class="ml-[12%] mr-[2%] w-[90%] lg:w-[80%] flex-none
+                  snap-center
+                  transition-transform duration-300 ease-in-out">
+        <div class="rounded-3xl bg-primary-300 ">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div class="pt-6 pb-6 md:pt-14 px-4 md:px-8 lg:px-12">
+              <h3 class="text-3xl font-bold">
+                Définissez vos prérequis de recrutement à travers un formulaire simple et rapide à compléter
+              </h3>
+              <p class="mt-6">
+                <%= link_to "Réserver une démo", ENV.fetch("CALENDLY_URL"), target: "_blank", class: "hide-link-icon button-ghost button-md" %>
+              </p>
+            </div>
+            <div class="self-end h-full max-h-[360px]">
+              <%= image_tag "sign-up.webp", class: "h-full w-full object-contain object-bottom" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-steps-carousel-target="content"
+            data-index="1"
+            class="mr-[2%] w-[90%] lg:w-[80%] flex-none
+                  snap-center
+                  transition-transform duration-300 ease-in-out">
+        <div class="rounded-3xl bg-peach ">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4">
+            <div class="pt-6 pb-6 md:pt-14 px-4 md:px-8 lg:px-12">
+              <h3 class="text-3xl font-bold">
+                Accédez aux fiches candidats sur l’application, réservez des créneaux dans votre agenda
+              </h3>
+              <p class="mt-6">
+                <%= link_to "Réserver une démo", ENV.fetch("CALENDLY_URL"), target: "_blank", class: "hide-link-icon button-ghost button-md" %>
+              </p>
+            </div>
+            <div class="ml-6 sm:ml-0 self-end h-full max-h-[360px] mt-4">
+              <%= image_tag "select.webp", class: "h-full w-full object-contain object-bottom" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-steps-carousel-target="content"
+            data-index="2"
+            class="mr-[12%] w-[90%] lg:w-[80%] flex-none
+                  snap-center
+                  transition-transform duration-300 ease-in-out">
+        <div class="rounded-3xl bg-mint ">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4">
+            <div class="pt-6 pb-6 md:pt-14 px-4 md:px-8 lg:px-12">
+              <h3 class="text-3xl font-bold">
+                Le recruteur partenaire vous accompagne pour le recrutement jusqu’à l’arrivée de votre candidat dans votre entreprise
+              </h3>
+              <p class="mt-6">
+                <%= link_to "Réserver une démo", ENV.fetch("CALENDLY_URL"), target: "_blank", class: "hide-link-icon button-ghost button-md" %>
+              </p>
+            </div>
+            <div class="ml-6 self-end h-full max-h-[360px] mt-4">
+              <%= image_tag "hire.webp", class: "h-full w-full object-contain object-bottom" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

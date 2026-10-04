@@ -1,0 +1,38 @@
+<!-- Sectors section with updated design -->
+<div class="bg-mute-200 py-10 md:py-20 px-4 sm:px-6 lg:px-20 relative">
+  <div class="relative z-10 max-w-7xl mx-auto">
+    <div class="mb-12">
+      <span class="text-[#908F8E] text-lg font-semibold uppercase tracking-wider">Spécialiste des métiers en tension</span>
+      <h2 class="mt-3 mb-10 title-2">
+        Recherchez votre futur collaborateur<br>dans un de ces secteurs
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <%= render(SectorCardComponent.new(
+        title: "BTP",
+        image_url: image_path("btp.webp"),
+        description: "Recruter un collaborateur dans ce secteur",
+        button_text: "En discuter",
+        button_link: ENV.fetch("CALENDLY_URL")
+      )) %>
+
+      <%= render(SectorCardComponent.new(
+        title: "Transport",
+        image_url: image_path("transport.webp"),
+        description: "Recruter un collaborateur dans ce secteur",
+        button_text: "En discuter",
+        button_link: ENV.fetch("CALENDLY_URL")
+      )) %>
+
+      <%= render(SectorCardComponent.new(
+        title: "Industrie",
+        image_url: image_path("industrie.webp"),
+        description: "Recruter un collaborateur dans ce secteur",
+        button_text: "En discuter",
+        button_link: ENV.fetch("CALENDLY_URL")
+      )) %>
+    </div>
+  </div>
+  <%= inline_svg_tag "rounded-bg.svg", class: "text-mute-200 z-0 absolute top-0 md:-top-24 left-0 right-0" %>
+</div>

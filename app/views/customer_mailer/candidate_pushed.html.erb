@@ -1,0 +1,72 @@
+<h2 style="margin: 0 0 20px; color: #092E46; font-size: 20px; font-weight: 600;">
+  Nouveau candidat pour votre projet
+</h2>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Bonjour <%= @customer.first_name %>,
+</p>
+
+<p style="margin: 0 0 20px; color: #333; font-size: 14px; line-height: 1.5;">
+  Un nouveau candidat a été sélectionné pour votre projet
+  <strong><%= @project.title %></strong>.
+</p>
+
+<!-- Candidat -->
+<div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 12px; color: #092E46; font-weight: 600; font-size: 15px;">
+    Candidat #<%= @project_candidate.anonymized_number %>
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Poste actuel :</strong> <%= @candidate.position || "Non renseigné" %>
+  </p>
+  <% if @candidate.total_experience_in_years %>
+    <p style="margin: 0; color: #333; font-size: 14px;">
+      <strong>Expérience :</strong> <%= @candidate.total_experience_in_years %> ans
+    </p>
+  <% end %>
+</div>
+
+<p style="margin: 24px 0 16px; color: #092E46; font-weight: 600; font-size: 15px;">
+  Pourquoi ce profil ?
+</p>
+
+<% if @project_candidate.summary.present? %>
+  <div style="background-color: #e8e8e8; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;">
+    <p style="margin: 0; color: #333; font-size: 14px;">
+      <%= markdown_inline(@project_candidate.summary) %>
+    </p>
+  </div>
+<% end %>
+
+<% if @project_candidate.strengths.any? %>
+  <div style="background-color: #d4edda; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;">
+    <p style="margin: 0 0 8px; color: #155724; font-weight: 600; font-size: 14px;">Points forts</p>
+    <ul style="margin: 0; padding-left: 20px;">
+      <% @project_candidate.strengths.each do |strength| %>
+        <li style="margin: 4px 0; color: #333; font-size: 14px;"><%= markdown_inline(strength) %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if @project_candidate.attention_points.any? %>
+  <div style="background-color: #fce4d6; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;">
+    <p style="margin: 0 0 8px; color: #c44; font-weight: 600; font-size: 14px;">Points d'attention</p>
+    <ul style="margin: 0; padding-left: 20px;">
+      <% @project_candidate.attention_points.each do |point| %>
+        <li style="margin: 4px 0; color: #333; font-size: 14px;"><%= markdown_inline(point) %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
+  <tr>
+    <td align="center">
+      <a href="<%= public_access_url(token: @access_token) %>"
+         style="display: inline-block; background-color: #E5E500; color: #092E46; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+        Voir le candidat
+      </a>
+    </td>
+  </tr>
+</table>

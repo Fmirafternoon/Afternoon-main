@@ -1,0 +1,22 @@
+<div class="flex gap-x-2 w-full" data-controller="skill-adder" data-skill-adder-url-value="<%= customer_project_wizard_path(project, :step2) %>" data-skill-adder-skills-value="<%= skills.to_json %>">
+  <input type="text"
+         placeholder="Ajouter une compétence..."
+         class="block rounded-lg px-3 py-2 w-full text-sm text-gray-900 bg-white border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-[#DBE204]"
+         data-skill-adder-target="input"
+         data-action="keydown.enter->skill-adder#add:prevent">
+         
+  <label class="flex items-center gap-x-2 cursor-pointer">
+  <input type="checkbox" class="checkbox" checked data-skill-adder-target="required">
+  <span>Obligatoire</span>
+  </label>
+  <select data-skill-adder-target="seniority" class="block rounded-lg px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 focus:outline-none focus:ring-0 focus:border-[#DBE204]">
+    <option value="">Séniorité (peu importe)</option>
+    <% ProjectSkill.seniorities.keys.each do |key| %>
+      <option value="<%= key %>"><%= t("enums.project_skill.seniority.#{key}") %></option>
+    <% end %>
+  </select>
+  <button type="button" class="button-ghost" data-action="click->skill-adder#add">Ajouter</button>
+
+  
+  
+</div>

@@ -1,0 +1,73 @@
+<%= simple_form_for @form, url: customer_project_wizard_path(@project, step), as: :wizard_form, method: :put do |f| %>
+  <div class="container mx-auto px-4 py-8" style="max-width:600px">
+    <div class="mb-4">
+      <div class="flex justify-between text-sm mb-2">
+        <span class="font-bold">Étape 3/3</span>
+        <span class="text-gray-500">Récapitulatif</span>
+      </div>
+      <div class="bg-gray-200 rounded-full h-2">
+        <div class="bg-primary h-2 rounded-full" style="width:100%"></div>
+      </div>
+    </div>
+
+    <h1 class="title-2 mb-2">Vérifiez et publiez</h1>
+    <p class="text-gray-500 mb-6">Relisez les informations avant de publier la recherche.</p>
+
+    <div class="card p-6 mb-4">
+      <div class="flex justify-between items-center mb-2">
+        <span class="font-bold">Le poste</span>
+        <%= link_to "Modifier", customer_project_wizard_path(@project, :step1), class: "button-ghost button-xs" %>
+      </div>
+      <div class="text-sm space-y-1">
+        <div><strong>Intitulé:</strong> <%= @project.position_name %></div>
+        <div><strong>Lieu:</strong> <%= @project.location&.city %></div>
+        <div><strong>Contrat:</strong> <%= @project.contract_type&.upcase %></div>
+        <% if @project.start_date.present? %>
+          <div><strong>Date de début:</strong> <%= l(@project.start_date, format: :long) %></div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card p-6 mb-4">
+      <div class="flex justify-between items-center mb-2">
+        <span class="font-bold">Critères de recherche</span>
+        <%= link_to "Modifier", customer_project_wizard_path(@project, :step2), class: "button-ghost button-xs" %>
+      </div>
+      <div class="text-sm space-y-1">
+        <% if @project.skills.any? %>
+          <div><strong>Compétences :</strong> <%= @project.skills.pluck(:name).join(", ") %></div>
+        <% end %>
+        <% if @project.min_experience_years.present? %>
+          <div><strong>Expérience :</strong> <%= @project.min_experience_years %>+ ans minimum</div>
+        <% end %>
+        <% if @project.target_salary.present? %>
+          <div><strong>Salaire cible :</strong> <%= number_to_currency(@project.target_salary, unit: "EUR", format: "%n %u", precision: 0) %> brut/an</div>
+        <% end %>
+        <% if @project.desired_availability.present? %>
+          <div><strong>Disponibilité :</strong> <%= t("enums.project.desired_availability.#{@project.desired_availability}") %></div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card p-6 mb-4">
+      <div class="flex justify-between items-center gap-4">
+        <div>
+          <span class="font-bold">Diffusion</span>
+          <p class="text-sm mt-1">
+            Diffuser mon projet aux agences de recrutement à proximité (50 km).
+            Elles pourront vous proposer des candidats correspondant à vos critères.
+          </p>
+        </div>
+        <%= f.check_box :broadcast_enabled, class: "checkbox shrink-0" %>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <%= link_to "← Retour", previous_wizard_path, class: "button-secondary" %>
+      <div class="flex gap-x-3">
+        <%= link_to "Enregistrer le brouillon", save_draft_customer_project_path(@project), data: { turbo_method: :patch }, class: "button-ghost" %>
+        <%= f.submit "Publier le projet", class: "button-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

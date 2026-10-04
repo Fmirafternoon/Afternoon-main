@@ -1,0 +1,34 @@
+<%= turbo_frame_tag :modal do %>
+  <div class="bg-white max-w-full w-[600px] p-8 rounded-lg">
+    <h1 class="modal-title mb-6">Sauvegarder cette recherche</h1>
+
+    <% if saved_search.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+        <ul class="list-disc list-inside">
+          <% saved_search.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= simple_form_for saved_search,
+        url: customer_saved_searches_path,
+        html: { data: { turbo_frame: :modal, target: "_top" } } do |f| %>
+
+      <%= f.input :name,
+                  label: "Nom de la recherche",
+                  placeholder: "Ex: Géomètres Bordeaux",
+                  input_html: { class: "mt-1", autofocus: true } %>
+
+      <%= f.hidden_field :criteria, value: saved_search.criteria.to_json %>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <%= f.submit 'Sauvegarder', class: 'button-primary' %>
+        <%= link_to 'Annuler', '#',
+            data: { action: 'turbo-modal#close' },
+            class: 'button-secondary' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

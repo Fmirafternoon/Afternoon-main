@@ -1,0 +1,100 @@
+<%= simple_form_for @form, url: agent_onboarding_path(step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Bienvenue à bord !",
+    current_step: step,
+    wizard_steps: wizard_steps,
+    previous_path: previous_wizard_path,
+    cancel_path: current_user.agent_onboarded? ? agent_root_path : nil
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :agent_onboarding,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path
+  ) do |step_component| %>
+    <%
+      step_component.with_breadcrumb(
+        wizard: :agent_onboarding,
+        wizard_steps:,
+        current_step: step,
+        description: "Nous avons besoin de quelques informations sur votre expérience professionnelle.",
+      )
+    %>
+    <div class="col-span-2 md:grid md:grid-cols-2 gap-x-4">
+      <h3 class="col-span-2 title-5 mt-4 mb-2">Votre localisation (ville)</h3>
+      <div data-controller="autocomplete-address" class="relative col-span-2 flex items-start space-x-2">
+        <%=
+          f.input :autocomplete_address,
+            label: "Adresse",
+            placeholder: "Commencez à saisir votre adresse...",
+            wrapper_html: { class: "w-full grow" },
+            input_html: {
+              autocomplete: false,
+              data: {
+                autocomplete_address_target: "input",
+                action: "input->autocomplete-address#search click->autocomplete-address#reOpen blur->autocomplete-address#onBlur"
+              }
+            }
+        %>
+
+        <div data-autocomplete-address-target="results"></div>
+        <%= f.input :zip_code, as: :hidden, input_html: { data: { autocomplete_address_target: "zip" } } %>
+        <%= f.input :city, as: :hidden, input_html: { data: { autocomplete_address_target: "city" } } %>
+        <%= f.input :lat, as: :hidden, input_html: { data: { autocomplete_address_target: "lat" } } %>
+        <%= f.input :lng, as: :hidden, input_html: { data: { autocomplete_address_target: "lng" } } %>
+      </div>
+
+
+      <h3 class="col-span-2 title-5 mb-2 mt-6">Entreprises avec lesquelles vous travaillez</h3>
+      <div class="relative col-span-2 flex flex-col md:flex-row items-start space-x-2">
+
+        <div data-controller="autocomplete-company" class="relative col-span-2 flex items-start space-x-2">
+          <%=
+            f.input :company_name,
+              label: "Nom de l'entreprise",
+              wrapper_html: { class: "w-full grow" },
+              input_html: {
+                autocomplete: false,
+                data: {
+                  autocomplete_company_target: "input",
+                  action: "input->autocomplete-company#search click->autocomplete-company#reOpen blur->autocomplete-company#onBlur"
+                }
+              }
+          %>
+          <div data-autocomplete-company-target="results"></div>
+          <%= f.input :company_siren, wrapper_html: { class: "w-full md:min-w-[170px]" }, input_html: { data: { autocomplete_company_target: "siren" } } %>
+        </div>
+
+        <%=
+          button_tag(
+            "Ajouter",
+            name: "commit",
+            value: "add_company",
+            type: "submit",
+            class: "button-ghost button-xl w-full md:w-auto"
+          )
+        %>
+      </div>
+
+      <div class="col-span-2">
+        <% if current_user.recruitment_office.partner_companies&.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% current_user.recruitment_office.partner_companies.each do |company| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1"><%= company.name %></span>
+                <%= link_to "&times;".html_safe,
+                    agent_partner_company_path(company),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette entreprise ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune entreprise ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

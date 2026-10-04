@@ -1,0 +1,30 @@
+<div id="candidate-basket-button">
+  <% if current_basket.has_candidate?(candidate) %>
+    <% basket_item = current_basket.basket_item_for_candidate(candidate) %>
+    <% if basket_item.status_meeting_requested? || basket_item.status_meeting_scheduled? %>
+      <div class="flex items-center gap-2 px-4 py-3 bg-success-100 border border-success-200 rounded-lg">
+        <%= inline_svg_tag "icons/calendar.svg", class: "w-5 h-5 text-success-700" %>
+        <div>
+          <div class="text-sm font-medium text-success-700">Rendez-vous demandé</div>
+          <div class="text-xs text-success-600">Un email a été envoyé à l'agent</div>
+        </div>
+      </div>
+    <% else %>
+      <%= button_to customer_basket_remove_candidate_path(basket_item_id: basket_item.id, candidate_id: candidate.id),
+                    method: :delete,
+                    data: { turbo: true },
+                    class: "button-secondary button-md flex items-center justify-center gap-2" do %>
+        <%= inline_svg_tag "icons/x.svg", class: "w-5 h-5" %>
+        Enlever de la shortlist
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= button_to customer_basket_add_candidate_path(candidate_id: candidate.id),
+                  method: :post,
+                  data: { turbo: true },
+                  class: "button-primary button-md flex items-center justify-center gap-2" do %>
+      <%= inline_svg_tag "icons/plus.svg", class: "w-5 h-5" %>
+      Ajouter à la shortlist
+    <% end %>
+  <% end %>
+</div>

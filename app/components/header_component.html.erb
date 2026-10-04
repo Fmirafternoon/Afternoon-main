@@ -1,0 +1,40 @@
+<div class="<%= "pb-4" unless tabs.present? %> w-full border-b bg-white border-gray-200">
+  <div class="px-4 sm:px-6 lg:px-8 pt-4 md:flex md:items-center md:justify-between">
+    <div class="min-w-0 flex-1">
+      <% if header.present? %>
+        <div class="pb-1">
+          <%= header %>
+        </div>
+      <% end %>
+
+      <div class="flex items-center space-x-2">
+        <% if prefix.present? %>
+          <div class="flex-shrink-0">
+            <%= prefix %>
+          </div>
+        <% end %>
+        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate ">
+          <%= @title %>
+        </h2>
+        <% if suffix.present? %>
+          <div class="flex-shrink-0">
+            <%= suffix %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if body.present? %>
+        <div class="pt-2">
+          <%= body %>
+        </div>
+      <% end %>
+    </div>
+    <div class="flex ml-4 space-x-4">
+      <%= actions %>
+    </div>
+  </div>
+
+  <% if tabs.present? %>
+    <%= tabs %>
+  <% end %>
+</div>

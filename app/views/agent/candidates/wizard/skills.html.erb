@@ -1,0 +1,130 @@
+<%= simple_form_for @form, url: agent_candidate_wizard_path(@candidate, step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Construire le profil du candidat",
+    cancel_path: agent_candidate_path(@candidate),
+    current_step: step,
+    previous_path: previous_wizard_path,
+    wizard_steps: wizard_steps,
+    show_finish: true
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :candidate,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path,
+    show_finish: true
+  ) do |step_component| %>
+    <% step_component.with_breadcrumb(
+      wizard: :candidate,
+      wizard_steps: wizard_steps,
+      current_step: step,
+      description: "Vérifiez et complétez les informations du candidat. Seul les profils 100% complétés seront proposés.",
+      step_path: ->(step) { step_path(step) },
+      step_accessible: ->(step) { step_accessible?(step) }
+    ) %>
+
+      <% if @form.errors.has_key?(:base) %>
+        <div class="col-span-2 notice-important mb-4">
+          <%= @form.errors.messages_for(:base).join(', ') %>
+        </div>
+      <% end %>
+
+      <h3 class="col-span-2 title-5 mb-2">Ajouter un secteur d'activité</h3>
+
+      <div class="col-span-2 flex items-start space-x-2">
+        <%= f.input :sector_id, label: "Secteur d'activité", collection: Sector.all, wrapper_html: { class: "w-full grow" } %>
+        <%= button_tag "Ajouter", type: "submit", name: "commit", value: "add_sector", class: "button-ghost button-xl" %>
+      </div>
+
+      <div class="col-span-2">
+        <h3 class="title-5 mb-2 text-mute-800">Secteurs d'activités actuels</h3>
+        <% if @candidate.sectors.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.candidate_sectors.each do |candidate_sector| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1"><%= candidate_sector.sector.name %></span>
+                <%= link_to "&times;".html_safe,
+                    agent_candidate_sector_path(candidate_sector),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce secteur d'activité ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucun secteur d'activité ajouté pour le moment.</p>
+        <% end %>
+      </div>
+
+
+      <h3 class="col-span-2 mt-8 title-5 mb-2">Ajouter une compétence</h3>
+      <div class="col-span-2 flex items-start space-x-2">
+        <%= f.input :skill, label: "Nouvelle compétence", wrapper_html: { class: "w-full grow" } %>
+        <%= button_tag "Ajouter", type: "submit", name: "commit", value: "add_skill", class: "button-ghost button-xl" %>
+      </div>
+
+      <div class="col-span-2">
+        <h3 class="title-5 mb-2 text-mute-800">Compétences actuelles</h3>
+        <% if @candidate.candidate_skills.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.candidate_skills.each do |candidate_skill| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1"><%= candidate_skill.skill.name %></span>
+
+                <% if candidate_skill.seniority.present? %>
+                  <span class="mr-1 text-xs text-gray-500">
+                    <%= t("enums.candidate_skill.seniority.#{candidate_skill.seniority}") %>
+                  </span>
+                <% end %>
+
+                <%= link_to "✏️", edit_agent_candidate_skill_path(candidate_skill), class: "mr-1" %>
+
+                <%= link_to "&times;".html_safe,
+                    agent_candidate_skill_path(candidate_skill),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette compétence ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune compétence ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+
+      <h3 class="mt-8 title-5 mb-2">Ajouter une langue</h3>
+      <div class="col-span-2 flex items-start space-x-2">
+        <%= f.input :language_code, wrapper_html: { class: "w-full grow" }, collection: @form.languages_list %>
+        <%= f.input :language_level, wrapper_html: { class: "w-full grow" }, collection: @form.language_levels_list %>
+        <% if @form.errors.has_key?(:base) %>
+          <div class="notice-important mb-4">
+            <%= @form.errors.messages_for(:base).join(', ') %>
+          </div>
+        <% end %>
+        <%= button_tag "Ajouter", type: "submit", name: "commit", value: "add_language", class: "button-ghost button-xl" %>
+      </div>
+
+      <div class="col-span-2">
+        <h3 class="title-5 mb-2 text-mute-800">Langues du candidat</h3>
+        <% if @candidate.candidate_languages.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.candidate_languages.each do |candidate_language| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1">
+                  <%= candidate_language.name %>
+                  <%= candidate_language.level %>
+                </span>
+                <%= link_to "&times;".html_safe,
+                    agent_candidate_language_path(candidate_language),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette langue ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune compétence ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+
+  <% end %>
+<% end %>

@@ -1,0 +1,21 @@
+<div class="container mx-auto px-4 py-8" style="max-width:700px">
+  <h1 class="title-2 mb-2">Questions avant présentation</h1>
+  <p class="text-gray-500 mb-6">
+    Avant de présenter ce candidat au client, merci de compléter les informations manquantes.
+  </p>
+
+  <%= form_with url: questions_agent_project_candidate_path(@project, @project_candidate), method: :post do %>
+    <% @questions.each do |question| %>
+      <div class="mb-6">
+        <label class="label block mb-2"><%= question.question %></label>
+        <%= text_area_tag "answers[#{question.id}]", question.answer, rows: 3,
+              class: "block w-full rounded-lg px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 focus:outline-none focus:ring-0 focus:border-[#DBE204]" %>
+      </div>
+    <% end %>
+
+    <div class="flex justify-between mt-6">
+      <%= link_to "← Retour", agent_project_candidate_path(@project, @project_candidate), class: "button-secondary" %>
+      <%= submit_tag "Enregistrer les réponses", class: "button-primary" %>
+    </div>
+  <% end %>
+</div>

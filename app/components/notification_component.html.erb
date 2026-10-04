@@ -1,0 +1,15 @@
+<div data-controller="notification" class="translate-x-full opacity-0 transition-all ease-in-out duration-300 pointer-events-auto w-full overflow-hidden rounded-lg bg-black shadow-lg">
+  <div class="p-4">
+    <div class="flex items-center justify-between gap-4">
+      <%= inline_svg_tag(icon, class: "w-6 h-6 #{color}") %>
+      <p class="font-medium text-white">
+        <%= message %>
+      </p>
+      <div class="flex items-center">
+        <button type="button" class="cursor-pointer" data-action="click->notification#close">
+          <%= inline_svg_tag('icons/x.svg', class: "w-4 h-4 text-white") %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

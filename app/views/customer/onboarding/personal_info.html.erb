@@ -1,0 +1,40 @@
+<%= simple_form_for @form, url: customer_onboarding_path(step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Bienvenue à bord !",
+    current_step: step,
+    wizard_steps: wizard_steps
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :customer_onboarding,
+    wizard_steps: wizard_steps,
+    current_step: step,
+  ) do |step_component| %>
+    <%
+      step_component.with_breadcrumb(
+        wizard: :customer_onboarding,
+        wizard_steps:,
+        current_step: step,
+        description: "Nous avons besoin de quelques informations pour vous permettre d'accéder à votre espace client.",
+      )
+    %>
+    <div>
+      <%= f.input :first_name %>
+    </div>
+    <div>
+      <%= f.input :last_name %>
+    </div>
+
+    <div class="mt-6">
+      <%= f.input :phone_number %>
+    </div>
+    <div></div>
+
+    <div class="mt-6">
+      <%= f.input :job_title %>
+    </div>
+    <div></div>
+
+  <% end %>
+<% end %>

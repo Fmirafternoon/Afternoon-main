@@ -1,0 +1,79 @@
+<div class=" w-full flex items-center justify-between border-t border-gray-200 bg-white px-4 py-2 sm:px-6">
+
+  <div class="flex flex-1 justify-between sm:hidden items-center">
+
+    <% if pagy.prev %>
+      <%= link_to pagy_url_for(page: pagy.prev), class: "inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+        <%= inline_svg_tag "icons/chevron-left.svg" %>
+      <% end %>
+    <% else %>
+      <span class="opacity-0 px-4 py-2">
+        <%= inline_svg_tag "icons/chevron-left.svg" %>
+      </span>
+    <% end %>
+
+    <div class="text-sm text-gray-700">
+      Page
+      <span class="font-medium"><%= pagy.page %></span>
+      sur <span class="font-medium"><%= pagy.count %></span>
+    </div>
+
+    <% if pagy.next %>
+      <%= link_to pagy_url_for(page: pagy.next), class: "inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+        <%= inline_svg_tag "icons/chevron-right.svg" %>
+      <% end %>
+    <% else %>
+      <span class="opacity-0 px-4 py-2">
+        <%= inline_svg_tag "icons/chevron-right.svg" %>
+      </span>
+    <% end %>
+
+  </div>
+
+  <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm text-gray-700">
+        Affichage de
+        <span class="font-medium"><%= pagy.from %></span>
+        -
+        <span class="font-medium"><%= pagy.to %></span>
+        sur <span class="font-medium"><%= pagy.count %></span> résultats
+
+      </p>
+    </div>
+    <div>
+      <nav class="inline-flex font-medium space-x-1" aria-label="Pagination">
+        <% if pagy.prev %>
+          <%= link_to pagy_url_for(page: pagy.prev), class: "inline-flex items-center justify-center h-9 w-9 rounded-full text-gray-400 hover:bg-gray-100 focus:z-20 focus:outline-offset-0" do %>
+            <%= inline_svg_tag "icons/chevron-left.svg" %>
+          <% end %>
+        <% end %>
+        <% if pagy.series.many? %>
+          <% pagy.series.each do |page| %>
+            <% if page.is_a?(Integer) %>
+              <%= link_to pagy_url_for(page: page), class: "inline-flex items-center justify-center h-9 w-9 rounded-full text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:z-20 focus:outline-offset-0" do %>
+                <%= page %>
+              <% end %>
+            <% else %>
+              <% if page == :gap %>
+                <div class="flex items-center px-2">
+                  <%= inline_svg_tag 'icons/ellipsis-horizontal.svg', class: "text-gray-400" %>
+                </div>
+              <% else %>
+                <span class="inline-flex items-center justify-center h-9 w-9 rounded-full text-sm bg-blue-500 text-white">
+                  <%= page %>
+                </span>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if pagy.next %>
+          <%= link_to pagy_url_for(page: pagy.next), class: "inline-flex items-center justify-center h-9 w-9 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:z-20 focus:outline-offset-0" do %>
+            <%= inline_svg_tag "icons/chevron-right.svg" %>
+          <% end %>
+        <% end %>
+      </nav>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="container mx-auto px-4 py-8" style="max-width:600px">
+  <h1 class="title-2 mb-6">Modifier : <%= @candidate_skill.skill.name %></h1>
+
+  <%= simple_form_for @candidate_skill,
+        url: agent_candidate_skill_path(@candidate_skill),
+        method: :patch do |f| %>
+
+    <%= f.input :seniority,
+        as: :select,
+        label: "Séniorité",
+        collection: CandidateSkill.seniorities.keys.map { |k| [t("enums.candidate_skill.seniority.#{k}"), k] },
+        include_blank: "Non précisée" %>
+
+    <%= f.input :experience,
+        as: :text,
+        label: "Expérience sur cette compétence",
+        input_html: { rows: 4 } %>
+
+    <div class="flex justify-between mt-6">
+      <%= link_to "← Retour", agent_candidate_wizard_path(@candidate, :skills), class: "button-secondary" %>
+      <%= f.button :submit, "Enregistrer", class: "button-primary" %>
+    </div>
+  <% end %>
+</div>

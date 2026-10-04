@@ -1,0 +1,94 @@
+<%= simple_form_for @form, url: agent_candidate_wizard_path(@candidate, step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Construire le profil du candidat",
+    cancel_path: agent_candidate_path(@candidate),
+    current_step: step,
+    previous_path: previous_wizard_path,
+    wizard_steps: wizard_steps,
+    show_finish: true
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :candidate,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path,
+    show_finish: true
+  ) do |step_component| %>
+    <% step_component.with_breadcrumb(
+      wizard: :candidate,
+      wizard_steps: wizard_steps,
+      current_step: step,
+      description: "Vérifiez et complétez les informations du candidat. Seul les profils 100% complétés seront proposés.",
+      step_path: ->(step) { step_path(step) },
+      step_accessible: ->(step) { step_accessible?(step) }
+    ) %>
+      <div class="col-span-2">
+        <%= f.input :title %>
+      </div>
+
+      <%= f.input :issuing_organization %>
+      <%= f.input :location %>
+      <%= f.input :from_date,
+                  label: "Date de début",
+                  placeholder: "MM/AAAA",
+                  input_html: {
+                    data: {
+                      controller: "imask",
+                      imask_type_value: "month-year"
+                    }
+                  },
+                  hint: "Format: MM/AAAA" %>
+
+      <%= f.input :to_date,
+                  label: "Date de fin",
+                  placeholder: "MM/AAAA",
+                  input_html: {
+                    data: {
+                      controller: "imask",
+                      imask_type_value: "month-year"
+                    }
+                  },
+                  hint: "Format: MM/AAAA" %>
+
+      <div class="col-span-2">
+        <%= button_tag "Ajouter formation", type: "submit", name: "commit", value: "add_education", class: "w-full button-ghost button-xl" %>
+      </div>
+
+
+      <div class="col-span-2 mt-6">
+        <h3 class="title-5 text-mute-800 mb-2">Éxpériences</h3>
+        <% if @candidate.educations.any? %>
+          <div class="flex flex-col gap-4">
+          <% @candidate.educations.each do |education| %>
+            <div class="flex justify-between items-start bg-gray-100 rounded-xl px-6 py-4">
+              <div class="mr-1">
+                <div class="paragraph-sm text-mute-800">
+                  <% if education.from_date.present? && education.to_date.present? %>
+                    <%= education.from_date %>
+                    - <%= education.to_date %>
+                  <% end %>
+                </div>
+                <h3 class="label-sm"><%= education.title %></h3>
+                <p class="paragraph-sm">
+                  <%= education.issuing_organization %>
+                  <% if education.location.present? && education.issuing_organization.present? %>
+                    •
+                  <% end %>
+                  <%= education.location %>
+                </p>
+
+              </div>
+              <%= link_to "&times;".html_safe,
+                  agent_candidate_education_path(education),
+                  data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette expérience ?" },
+                  class: "text-red-500 text-xl" %>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-gray-500">Aucune formation ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+  <% end %>
+<% end %>

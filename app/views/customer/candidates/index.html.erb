@@ -1,0 +1,147 @@
+<div class="md:grid md:grid-cols-12">
+  <div class="md:col-span-4 lg:col-span-3 md:pr-16">
+
+    <% if @saved_searches.present? %>
+      <div class="mb-8" id="saved-searches-section">
+        <h3 class="title-3 mb-8">
+          Mes recherches
+        </h3>
+        <%= render "saved_searches_list", saved_searches: @saved_searches, active_saved_search_id: @active_saved_search_id %>
+      </div>
+    <% else %>
+      <!-- Conteneur vide pour les futures recherches sauvegardées -->
+      <div class="mb-8 hidden" id="saved-searches-container">
+        <h3 class="title-3 mb-8">
+          Mes recherches
+        </h3>
+        <div id="saved-searches-list"></div>
+      </div>
+    <% end %>
+
+    <h3 class="title-3 mb-8" id="filters-title">
+      Filtres
+    </h3>
+    <div id="search-form">
+      <%= render "search_form", search_form: @search_form, saved_search_id: @active_saved_search_id %>
+    </div>
+  </div>
+
+  <div class="mt-8 md:mt-0 md:col-span-8 lg:col-span-9">
+    <%= form_tag customer_candidates_path, method: :get, data: { turbo: { method: :get }}, class: "mb-6 flex flex-col md:flex-row gap-x-2 w-full", data: { turbo: false } do %>
+      <div class="flex flex-col md:flex-row gap-x-2 w-full bg-white border-1 border-mute-400 rounded-2xl md:rounded-full">
+        <%= text_field_tag "customer_search_form[query]",
+              @search_form.query,
+              placeholder: "Essayez \"Conducteur de travaux\"",
+              class: "rounded-full h-16 focus:ring-0 grow border-none" %>
+        <div class="border border-b md:border-2 md:border-r border-mute-300 md:my-3"></div>
+
+        <div data-controller="autocomplete-address" class="relative grow flex items-start space-x-2">
+          <%= text_field_tag "customer_search_form[autocomplete_address]",
+                @search_form.autocomplete_address,
+                class: "h-16 focus:ring-0 grow border-none rounded-b-full",
+                placeholder: "Ville du poste",
+                autocomplete: "off",
+                data: {
+                  autocomplete_address_target: "input",
+                  action: "input->autocomplete-address#search click->autocomplete-address#reOpen blur->autocomplete-address#onBlur"
+                } %>
+
+          <div data-autocomplete-address-target="results"></div>
+          <%= hidden_field_tag "customer_search_form[zip_code]", @search_form.zip_code, data: { autocomplete_address_target: "zip" } %>
+          <%= hidden_field_tag "customer_search_form[city]", @search_form.city, data: { autocomplete_address_target: "city" } %>
+          <%= hidden_field_tag "customer_search_form[lat]", @search_form.lat, data: { autocomplete_address_target: "lat" } %>
+          <%= hidden_field_tag "customer_search_form[lng]", @search_form.lng, data: { autocomplete_address_target: "lng" } %>
+        </div>
+
+      </div>
+      <%= button_tag type: :submit, class: "m-2 button-primary button-md rounded-full self-end" do %>
+        <%= inline_svg_tag "icons/search.svg", class: "w-5" %>
+        <span class="block md:hidden paragraph-sm">Rechercher</span>
+      <% end %>
+    <% end %>
+
+
+    <div class="mb-6">
+      <% candidates_count = @candidates.unscope(:select).unscope(:order).count %>
+      <h3 class="title-3">
+        <%= candidates_count %>
+        <%= "résultat".pluralize(candidates_count) %>
+      </h3>
+
+      <div class="py-2 flex flex-wrap items-center gap-2">
+        <% if @search_form.query.present? %>
+          <%= link_to customer_candidates_path(customer_search_form: @search_form.attributes.except("query")) do %>
+            <%= render TagComponent.new(kind: "black") do %>
+              <div class="flex my-[3px] gap-x-2 items-center font-semibold">
+                <%= @search_form.query %>
+                <span class="text">
+                  &times;
+                </span>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if @search_form.autocomplete_address.present? %>
+          <%= link_to customer_candidates_path(customer_search_form: @search_form.attributes.except("lat", "lng", "city", "zip_code", "autocomplete_address")) do %>
+            <%= render TagComponent.new(kind: "black") do %>
+              <div class="flex my-[3px] gap-x-2 items-center font-semibold">
+                <%= @search_form.autocomplete_address %>
+                <span class="text">
+                  &times;
+                </span>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% @search_form.sector_ids.each do |sector_id| %>
+          <% sector = Sector.find(sector_id) rescue nil %>
+          <% if sector %>
+            <%= link_to customer_candidates_path(customer_search_form: @search_form.attributes.merge("sector_ids" => @search_form.sector_ids.reject { |id| id == sector_id })) do %>
+              <%= render TagComponent.new(kind: "black") do %>
+                <div class="flex my-[3px] gap-x-2 items-center font-semibold">
+                  <%= sector.name %>
+                  <span class="text">&times;</span>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% @search_form.skills.each do |skill| %>
+          <%= link_to customer_candidates_path(customer_search_form: @search_form.attributes.merge("skills" => @search_form.skills.reject { |s| s == skill })) do %>
+            <%= render TagComponent.new(kind: "black") do %>
+              <div class="flex my-[3px] gap-x-2 items-center font-semibold">
+                <%= skill %>
+                <span class="text">&times;</span>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% has_active_filters = @search_form.query.present? ||
+                               @search_form.autocomplete_address.present? ||
+                               @search_form.sector_ids.any? ||
+                               @search_form.skills.any? %>
+
+        <% if has_active_filters %>
+          <% if current_user.customer? %>
+            <%= link_to "Enregistrer la recherche",
+                        new_customer_saved_search_path(@search_form.attributes),
+                        data: { turbo_frame: "modal" },
+                        class: "button-ghost button-xs" %>
+          <% end %>
+
+          <%= link_to "Effacer les filtres",
+                      customer_candidates_path,
+                      class: "text-gray-600 underline hover:text-gray-800 text-sm" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <%= render partial: "customer/candidates/card", collection: @candidates, as: :candidate %>
+    </div>
+  </div>
+</div>

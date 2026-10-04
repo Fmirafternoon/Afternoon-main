@@ -1,0 +1,35 @@
+<%= simple_form_for @form, url: agent_candidate_wizard_path(@candidate, step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Construire le profil du candidat",
+    cancel_path: agent_candidate_path(@candidate),
+    current_step: step,
+    previous_path: previous_wizard_path,
+    wizard_steps: wizard_steps,
+    show_finish: true
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :candidate,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path,
+    show_finish: true
+  ) do |step_component| %>
+    <% step_component.with_breadcrumb(
+      wizard: :candidate,
+      wizard_steps: wizard_steps,
+      current_step: step,
+      description: "Vérifiez et complétez les informations du candidat. Seul les profils 100% complétés seront proposés.",
+      step_path: ->(step) { step_path(step) },
+      step_accessible: ->(step) { step_accessible?(step) }
+    ) %>
+
+      <!-- Start content -->
+
+      <%= f.input :recruitment_commission %>
+      <!-- End content -->
+
+
+  <% end %>
+<% end %>

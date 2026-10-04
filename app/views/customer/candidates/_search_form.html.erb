@@ -1,0 +1,54 @@
+<%= simple_form_for :customer_search_form, url: customer_candidates_path, method: :get, html: { class: "space-y-4" } do |form| %>
+  <!-- Conserver les paramètres de recherche existants -->
+  <%= form.hidden_field :query, value: search_form.query %>
+  <%= form.hidden_field :autocomplete_address, value: search_form.autocomplete_address %>
+  <%= form.hidden_field :lat, value: search_form.lat %>
+  <%= form.hidden_field :lng, value: search_form.lng %>
+  <%= form.hidden_field :zip_code, value: search_form.zip_code %>
+  <%= form.hidden_field :city, value: search_form.city %>
+  <% if defined?(saved_search_id) && saved_search_id.present? %>
+    <%= form.hidden_field :saved_search_id, value: saved_search_id %>
+  <% end %>
+  <% search_form.skills.each do |skill| %>
+    <%= hidden_field_tag "customer_search_form[skills][]", skill %>
+  <% end %>
+
+  <div class="flex flex-col divide-y divide-neutral-200">
+    <div data-controller="reveal" class="pb-6"
+        data-reveal-storage-key-value="skills_filters">
+      <div data-action="click->reveal#toggle" class="select-none flex justify-between items-center cursor-pointer label-lg mb-3">
+        <div>
+          Compétences
+        </div>
+        <div>
+          <div data-reveal-target="iconOpen" class="hidden">
+            <%= inline_svg_tag "icons/chevron-up.svg", class: "w-6 h-6" %>
+          </div>
+          <div data-reveal-target="iconClosed">
+            <%= inline_svg_tag "icons/chevron-down.svg", class: "w-6 h-6" %>
+          </div>
+
+        </div>
+      </div>
+      <div data-reveal-target="content">
+        <div class="mx-1 space-y-3">
+          <!-- Formulaire d'ajout de compétence -->
+          <%= render "customer/candidates/add_skill_form", search_form: search_form, saved_search_id: defined?(saved_search_id) ? saved_search_id : nil %>
+
+          <!-- Affichage des compétences sélectionnées -->
+          <% if search_form.skills.any? %>
+            <div class="flex flex-wrap gap-2">
+              <% search_form.skills.each do |skill| %>
+                <%= link_to customer_candidates_path(customer_search_form: search_form.attributes.merge("skills" => search_form.skills.reject { |s| s == skill })),
+                            class: "inline-flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm" do %>
+                  <span class="mr-1"><%= skill %></span>
+                  <span class="text-red-500">&times;</span>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

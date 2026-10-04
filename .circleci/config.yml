@@ -1,0 +1,75 @@
+---
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@2.1.0
+
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/ruby:3.4.2-browsers
+        environment:
+          RAILS_ENV: test
+          COVERAGE: "true"
+          PGHOST: localhost
+          PGUSER: postgres
+          # Redis configuration for tests
+          REDIS_URL: redis://localhost:6379/
+          # Set CI environment variable
+          CI: "true"
+          # Email sender for tests
+          EMAIL_SENDER: "hello@domain.com"
+          SMTP_HOST: localhost
+          SMTP_USERNAME: test
+          SMTP_PASSWORD: test
+          TERMS_UPDATED_AT: 2025-03-05T00:00:00Z
+      - image: pgvector/pgvector:pg16
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
+      - image: cimg/redis:7.2
+
+    parallelism: 1
+    resource_class: large
+    steps:
+      - checkout
+      - ruby/install-deps
+
+      # Setup database
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Wait for Redis
+          command: dockerize -wait tcp://localhost:6379 -timeout 1m
+      - run:
+          name: Database setup
+          command: |
+            bin/rails db:create
+            bin/rails db:schema:load
+            bin/rails db:migrate
+
+      - run:
+          name: Precompile assets
+          command: bundle exec rails assets:precompile
+
+      # Run tests with coverage
+      - run:
+          name: Run tests
+          command: |
+            bundle exec rspec
+
+      # Store test results and artifacts
+      - store_test_results:
+          path: test/reports
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_and_test

@@ -1,0 +1,26 @@
+<div>
+  <h2 class="title-3 mb-2">
+    Étape <%= wizard_steps.index(current_step) + 1 %> <br>
+  </h2>
+  <p class="paragraph-sm text-mute-900 mb-6">
+    <%= description %>
+  </p>
+
+  <% wizard_steps.each_with_index do |wizard_step, index| %>
+    <div class="flex items-start mb-4 space-x-2.5">
+      <%= inline_svg_tag "icons/check.svg",
+          class: "mt-1 w-5 #{(wizard_steps.index(current_step) >= index) ? 'text-neutral-800' : 'text-mute-400'}" %>
+
+      <% if step_accessible&.call(wizard_step) && step_path&.call(wizard_step) %>
+        <%= link_to step_path.call(wizard_step),
+            class: "title-5 text-neutral-800 normal-case" do %>
+          <%= I18n.t("wizard.#{wizard}.#{wizard_step}") %>
+        <% end %>
+      <% else %>
+        <h3 class="title-5 text-neutral-800 normal-case">
+          <%= I18n.t("wizard.#{wizard}.#{wizard_step}") %>
+        </h3>
+      <% end %>
+    </div>
+  <% end %>
+</div>

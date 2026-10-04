@@ -1,0 +1,67 @@
+<h2 style="margin: 0 0 20px; color: #092E46; font-size: 20px; font-weight: 600;">
+  Publication arrivant à expiration
+</h2>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Bonjour <%= @agent.first_name %>,
+</p>
+
+<p style="margin: 0 0 20px; color: #333; font-size: 14px; line-height: 1.5;">
+  La publication du candidat <strong><%= @candidate.full_name %></strong> (<%= @candidate.position %>)
+  arrive à expiration dans <strong><%= @days_until_expiration %> jour<%= 's' if @days_until_expiration > 1 %></strong>.
+</p>
+
+<!-- Alerte -->
+<div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 8px; color: #856404; font-weight: 600; font-size: 14px;">
+    Action requise
+  </p>
+  <p style="margin: 0; color: #856404; font-size: 14px;">
+    Si vous ne faites rien, ce candidat sera <strong>automatiquement dépublié</strong>
+    dans <%= @days_until_expiration %> jour<%= 's' if @days_until_expiration > 1 %>.
+  </p>
+</div>
+
+<!-- Infos candidat -->
+<div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Candidat :</strong>
+    <a href="<%= agent_candidate_url(@candidate) %>" style="color: #092E46;"><%= @candidate.full_name %></a>
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Poste :</strong> <%= @candidate.position %>
+  </p>
+  <p style="margin: 0; color: #333; font-size: 14px;">
+    <strong>Publié le :</strong> <%= l(@candidate.published_at, format: :long) %>
+  </p>
+</div>
+
+<p style="margin: 24px 0 16px; color: #092E46; font-weight: 600; font-size: 15px;">
+  Choisissez une action :
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="center" style="padding: 8px;">
+      <a href="<%= @extend_url %>"
+         style="display: inline-block; background-color: #28a745; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+        Prolonger de 14 jours
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding: 8px;">
+      <a href="<%= @unpublish_url %>"
+         style="display: inline-block; background-color: #dc3545; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+        Dépublier maintenant
+      </a>
+    </td>
+  </tr>
+</table>
+
+<div style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: 12px 16px; border-radius: 8px; margin: 24px 0;">
+  <p style="margin: 0; color: #1976d2; font-size: 13px;">
+    <strong>Astuce :</strong> Prolonger la publication vous donne 14 jours supplémentaires
+    pour trouver le bon client pour ce candidat.
+  </p>
+</div>

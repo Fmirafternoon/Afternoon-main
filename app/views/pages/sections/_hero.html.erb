@@ -1,0 +1,23 @@
+<div class="relative z-10 bg-mute-400 px-3 md:px-6">
+  <div class="lg:min-h-[80vh] flex items-center max-w-7xl mx-auto rounded-3xl bg-cover bg-center" style="background: linear-gradient(
+          rgba(9, 46, 70, 0.1),
+          rgba(9, 46, 70, 0.4)
+        ), url(<%= image_path "header.webp" %>); background-size: cover">
+
+    <div class="p-4 py-24 max-w-3xl mx-auto ">
+      <h1 class="mt-6 mb-3 text-left lg:text-center text-white title-1 text-shadow-lg">
+        Vos recrutements de qualité, pour un temps et un budget maîtrisé
+      </h1>
+
+      <p class="mb-8 text-left text-2xl font-semibold lg:text-center text-white text-shadow-lg">
+        Accédez instantanément aux meilleurs talents, qualifiés et validés par des recruteurs spécialisés
+      </p>
+
+      <div class="text-center">
+        <a href="<%= ENV.fetch("CALENDLY_URL")%>" target="_blank" class="hide-link-icon button-primary button-md">
+          Réserver une démo
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

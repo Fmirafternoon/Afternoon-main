@@ -1,0 +1,21 @@
+<%= simple_form_for :search, url: path, method: :get do |f| %>
+  <div class="flex items-stretch justify-center">
+    <%= f.input :query,
+      placeholder: placeholder,
+      wrapper: :search,
+      required: false,
+      input_html: {
+        value: query,
+        autocomplete: 'off',
+        class: "w-[300px]"
+      } %>
+    <% if query.present? %>
+      <%= link_to path, class: 'px-1 border-t border-b border-r border-gray-300 flex items-center hover:bg-red-100' do %>
+        <%= inline_svg_tag('x-mark.svg', class: 'text-red-500 w-6 h-6') %>
+      <% end %>
+    <% end %>
+    <button class="px-2 border-t border-b border-r border-gray-300 rounded-r-md hover:bg-gray-100" type="submit">
+      <%= inline_svg_tag('icons/search.svg', class: 'text-gray-600 h-5 w-5') %>
+    </button>
+  </div>
+<% end %>

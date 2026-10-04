@@ -1,0 +1,230 @@
+fr:
+  enums:
+    project:
+      desired_availability:
+        immediate: "Immediate"
+        within_1_month: "Sous 1 mois"
+        within_3_months: "Sous 3 mois"
+        flexible: "Flexible"
+    project_skill:
+      seniority:
+        junior: "Débutant (1–2 ans)"
+        intermediate: "Intermédiaire (3–5 ans)"
+        confirmed: "Confirmé (6–10 ans)"
+        expert: "Expert (10+ ans)"
+        
+    candidate_skill:
+      seniority:
+        junior: "Débutant (1–2 ans)"
+        intermediate: "Intermédiaire (3–5 ans)"
+        confirmed: "Confirmé (6–10 ans)"
+        expert: "Expert (10+ ans)"
+
+
+  wizard:
+    candidate:
+      personal_info: Identité & coordonnées
+      motivations: Cible & motivations
+      skills: Compétences & Langues
+      employments: Parcours d'emploi
+      educations: Parcours de formation
+      trainings: Diplômes & certifications
+      referrals: Références
+      availability: Disponibilité
+      comission: Prime de placement
+    customer_onboarding:
+      personal_info: Informations personnelles
+      company_info: Votre entreprise
+      positions: Postes à pourvoir
+    agent_onboarding:
+      personal_info: Informations personnelles
+      company_info: Votre entreprise
+  activemodel:
+    errors:
+      models:
+        candidate/skills_form:
+          attributes:
+            sector_id:
+              at_least_one_sector: "Veuillez renseigner au moins un secteur d'activité"
+            skill:
+              at_least_one_skill: "Veuillez renseigner au moins une compétence"
+        candidate/personal_info_form:
+          attributes:
+            autocomplete_address:
+              blank: "Veuillez sélectionner au moins une ville dans la liste des suggestions"
+    attributes:
+      customer/project_step1_form:
+        position_name: "Intitulé du poste"
+        location_city: "Lieu"
+        start_date: "Date de début"
+        contract_type: "Type de contrat"
+        description: "Description"
+      customer/project_step2_form:
+        skill_names: "Compétences"
+        min_experience_years: "Expérience minimum"
+        education_level: "Niveau d'études"
+        languages: "Langues"
+        target_salary: "Salaire cible"
+        desired_availability: "Disponibilité"
+      candidate/skills_form:
+        sector_id: ""
+        skill: ""
+      candidate/personal_info_form:
+        autocomplete_address: ""
+        first_name: "Prénom"
+        last_name: "Nom"
+        birth_year: "Année de naissance"
+        phone_number: "Téléphone"
+        email: "Email"
+        gender: "Genre"
+      candidate/motivations_form:
+        position: "Poste recherché"
+        total_experience_in_years: "Années d'expérience"
+      candidate/employments_form:
+        title: "Titre"
+        company: "Entreprise"
+        from_date: "Date de début"
+        to_date: "Date de fin"
+        description: "Description"
+        location: "Lieu"
+        sector: "Secteur d'activité"
+      candidate/educations_form:
+        title: "Titre"
+        location: "Lieu"
+        issuing_organization: "Nom de l'établissement"
+        from_date: "Date de début"
+        to_date: "Date de fin"
+      candidate/trainings_form:
+        title: "Titre"
+        issuing_organization: "Nom de l'établissement"
+        year: "Année d'obtention"
+      candidate/referrals_form:
+        first_name: "Prénom"
+        last_name: "Nom"
+        phone_number: "Téléphone"
+        email: "Email"
+        company: "Entreprise"
+        position: "Poste"
+        description: "Contenu de la référence"
+      candidate/availability_form:
+        availability_notice: "Délai de disponibilité"
+        contract_type: "Type de contrat"
+        salary_expectation: "Salaire souhaité"
+        has_driving_license: "Permis de conduire"
+        has_a_car: "Dispose d'un véhicule"
+        availability_notice: "Délai de disponibilité"
+      candidate/comission_form:
+        recruitment_commission: "Montant de prime souhaité"
+  activerecord:
+    models:
+      user:
+        one: Utilisateur
+        other: Utilisateurs
+      recruitment_office:
+        one: Agence de recrutement
+        other: Agences de recrutement
+    attributes:
+      candidate:
+        gender: "Genre"
+        first_name: "Prénom"
+        last_name: "Nom"
+        birth_year: "Année de naissance"
+        phone_number: "Téléphone"
+        email: "Email"
+        status: "Statut"
+        address: "Adresse"
+        genders:
+          male: "Homme"
+          female: "Femme"
+        position: "Poste recherché"
+        description: Résumé du profil
+        total_experience_in_years: "Années d'expérience"
+        contract_type: Type de contrat
+        salary_expectation: Salaire souhaité
+        has_driving_license: Permis de conduire
+        has_a_car: Dispose d'un véhicule
+        availability_notice: Délai de disponibilité
+        availability_notices:
+          immediate: "Immédiat"
+          two_to_three_weeks: "2 à 3 semaines"
+          four_to_six_weeks: "4 à 6 semaines"
+          two_months: "2 mois"
+          three_months: "3 mois"
+          four_months_plus: "4 mois et plus"
+        contract_types:
+          cdi: "CDI"
+          cdd: "CDD"
+          interim: "Intérim"
+        recruitment_commission: "Montant de prime souhaité"
+        resume_summary:
+          skills: "Compétences"
+          management: "Management"
+          specializations: "Spécialisations"
+          accomplishments: "Réalisations"
+          security_qualifications: "Qualifications de sécurité"
+          tools_and_technologies: "Outils et technologies"
+        autocomplete_address: "Ville"
+      red_flag:
+        title: Titre
+        description: Description
+        answer: Réponse
+      user:
+        first_name: Prénom
+        last_name: Nom
+        email: Email
+        role: Rôle
+        recruitment_office_id: Cabinet de recrutement
+        job_title: Titre du poste
+        phone_number: Téléphone
+        avatar_url: Avatar
+        roles:
+          super_admin: "Super admin"
+          agent_manager: "Agent manager"
+          agent_user: "Agent utilisateur"
+          customer: "Client"
+      recruitment_office:
+        name: Nom
+        address: Adresse
+        zip_code: Code postal
+        city: Ville
+        url: URL
+        vat_number: N° TVA
+        siret_number: N° SIRET
+      employment:
+        title: Titre
+        company: Entreprise
+        start_date: Date de début
+        end_date: Date de fin
+        description: Description
+        location: Lieu
+        sector: Secteur d'activité
+      education:
+        title: Titre
+        location: Lieu
+        issuing_organization: Nom de l'établissement
+        from_date: Date de début
+        to_date: Date de fin
+      training:
+        title: Titre
+        issuing_organization: Nom de l'établissement
+        year: Année d'obtention
+        description: Description
+      referral:
+        first_name: Prénom
+        last_name: Nom
+        phone_number: Téléphone
+        email: Email
+        company: Entreprise
+        position: Poste
+      saved_search:
+        name: Nom
+        criteria: Critères
+        email_alerts_enabled: Alertes email activées
+        last_alert_sent_at: Dernière alerte envoyée
+  time:
+    formats:
+      short: "%d %B %Y"
+      default: "%d/%m/%Y %H:%M"
+      long: "%a %d %B %Y"
+      long_with_time: "%a %d %B %Y à %H:%M"
+      time: "%H:%M"

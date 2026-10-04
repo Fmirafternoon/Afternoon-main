@@ -1,0 +1,46 @@
+<%= render HeaderComponent.new(title: "Utilisateurs de #{current_user.recruitment_office.name}") do |header| %>
+  <%= header.with_actions do %>
+    <% if policy(:user).new? %>
+      <%= link_to new_agent_user_path, class: "button-white" do %>
+        <%= inline_svg_tag('icons/plus.svg', class: "w-4") %>
+        Ajouter un utilisateur
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render TableComponent.new do |table| %>
+  <%= table.with_header do |header| %>
+    <%= header.with_cell { 'Nom' } %>
+    <%= header.with_cell { 'Rôle' } %>
+    <%= header.with_cell %>
+  <% end %>
+
+  <% @users.each do |user| %>
+    <%= table.with_row(id: dom_id(user)) do |row| %>
+      <%= row.with_cell(classes: "relative") do %>
+        <div class="flex gap-x-2">
+          <%= link_to user.full_name, agent_user_path(user), class: "link" %>
+        </div>
+      <% end %>
+      <%= row.with_cell do %>
+        <%= render Role::BadgeComponent.new(role: user.role) %>
+      <% end %>
+      <%= row.with_cell(classes: 'text-right') do %>
+        <%= render DropdownComponent.new do |dropdown| %>
+          <%= dropdown.with_trigger(classes: "button-dropdown") do %>
+            <%= inline_svg_tag('icons/ellipsis.svg', class: "text-gray-500") %>
+          <% end %>
+          <%= dropdown.with_body do %>
+            <%= link_to "Détails", agent_user_path(user), class: "link-dropdown" %>
+            <%= link_to "Modifier", edit_agent_user_path(user), class: "link-dropdown" %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= table.with_empty_search %>
+<% end %>
+
+<%= render PaginationComponent.new(pagy: @pagy) %>

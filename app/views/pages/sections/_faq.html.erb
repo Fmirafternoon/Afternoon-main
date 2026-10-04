@@ -1,0 +1,45 @@
+<div class="bg-white py-10 md:py-20 px-4 sm:px-6 lg:px-20 relative">
+  <div class="relative z-10 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:gap-x-12">
+      <div class="md:w-2/5">
+        <h3 class="title-3 mb-4 ">
+          Une question sur notre fonctionnement ?
+        </h3>
+        <p class="mb-8 paragraph-sm text-mute-900">
+          Parcourez notre FAQ. Vous ne trouvez pas votre réponse ? <br>
+          <%= link_to "Contactez-nous", "mailto:contact@afternoon.team", class: "link" %>
+        </p>
+      </div>
+      <div class="md:w-3/5">
+
+        <%= render FaqSectionComponent.new do |faq| %>
+          <% faq.with_question(
+              title: "Est-ce que je peux contacter les candidats en direct ?",
+              answer: "Vous êtes en lien avec les recruteurs ayant qualifié les candidats. Vous entrez en contact avec les candidat une fois que ce dernier a donné son accord pour se porter candidat au poste que vous proposez.",
+              open: true
+            ) %>
+
+          <% faq.with_question(
+              title: "Qui sont les recruteurs de la plateforme ?",
+              answer: "Les recruteurs sont sélectionnés par Afternoon pour collaborer sur la plateforme. Ils travaillent dans des cabinets de recrutement spécialisés."
+            ) %>
+
+          <% faq.with_question(
+              title: "Comment je fais concrètement pour recruter un candidat ?",
+              answer: "Pour recruter un candidat sur Afternoon, sélectionnez un profil qualifié, contactez le recruteur dédié, organisez des entretiens en 48 heures, et finalisez le recrutement avec des prix fixés à l'avance."
+            ) %>
+
+          <% faq.with_question(
+              title: "Est-ce que je suis engagé contractuellement et à partir de quand ?",
+              answer: "Vous êtes engagés contractuellement dès que l'identité du candidat est révélé. Vous signez électroniquement les conditions générales de ventes et une lettre de mission."
+            ) %>
+
+          <% faq.with_question(
+              title: "Est-ce qu'on est remboursé si le candidat ne termine pas sa période d'essai ?",
+              answer: "Si vous souhaitez remplacer le candidat qui est parti, vous basculez sur une prestation de recherche, et vous ne payez que le reliquat de la prestation. Si vous ne souhaitez pas remplacer le candidat, la somme n'est pas remboursable."
+            ) %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

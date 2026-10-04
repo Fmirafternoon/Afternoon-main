@@ -1,0 +1,97 @@
+<div class="container mx-auto">
+
+<div class="mb-4">
+  <%= link_to agent_projects_path, class: "button-link button-md" do %>
+    <%= inline_svg_tag "icons/arrow-left.svg", class: "w-4 sm:w-5" %>
+    Retour aux projets
+  <% end %>
+</div>
+
+<div class="flex justify-between items-start mb-6">
+  <div>
+    <h1 class="title-3"><%= @project.title %></h1>
+    <p class="paragraph-sm text-mute-700">
+      Client: <strong><%= @project.client_name %></strong>
+      - <%= @counts[:all] %> candidat(s) matche(s)
+    </p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+  <div class="lg:col-span-2">
+    <div class="button-group mb-4">
+      <%= active_link_to "Tous (#{@counts[:all]})", agent_project_path(@project), class: "", active: { status: nil } %>
+      <%= active_link_to "À valider (#{@counts[:matched]})", agent_project_path(@project, status: 'matched'), class: "", active: { status: "matched" } %>
+      <%= active_link_to "Présentés (#{@counts[:pushed]})", agent_project_path(@project, status: 'pushed'), class: "", active: { status: "pushed" } %>
+      <%= active_link_to "Interêts (#{@counts[:interested]})", agent_project_path(@project, status: 'interested'), class: "", active: { status: "interested" } %>
+      <%= active_link_to "Rejetés (#{@counts[:rejected]})", agent_project_path(@project, status: 'rejected'), class: "", active: { status: "rejected" } %>
+    </div>
+
+    <%= turbo_stream_from @project, :candidates %>
+
+    <% if @project_candidates.any? %>
+      <div class="space-y-4" id="project-candidates">
+        <% @project_candidates.each do |pc| %>
+          <%= render "agent/projects/candidates/card", pc: pc, project: @project %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-16 text-mute-700">
+        <p>Aucun candidat dans cette categorie.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <div class="card-secondary sticky top-4">
+      <h2 class="label-md mb-4">Details du projet</h2>
+      <div class="space-y-3 paragraph-xs">
+        <div>
+          <strong>Intitulé:</strong><br>
+          <%= @project.position_name || @project.title %>
+        </div>
+        <div>
+          <strong>Contrat:</strong><br>
+          <%= @project.contract_type || "-" %>
+        </div>
+        <div>
+          <strong>Lieu:</strong><br>
+          <%= @project.location&.city || "-" %>
+        </div>
+        <div>
+          <strong>Date de debut:</strong><br>
+          <%= @project.start_date ? l(@project.start_date, format: :short) : "-" %>
+        </div>
+        <% if @project.skills.any? %>
+          <div>
+            <strong>Competences:</strong><br>
+            <div class="flex flex-wrap gap-1 mt-1">
+              <% @project.skills.each do |skill| %>
+                <%= render TagComponent.new do %><%= skill.name %><% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <div>
+          <strong>Experience min:</strong><br>
+          <%= @project.min_experience_years ? "#{@project.min_experience_years}+ ans" : "-" %>
+        </div>
+        <div>
+          <strong>Salaire cible:</strong><br>
+          <%= @project.target_salary ? number_to_currency(@project.target_salary, unit: "EUR", format: "%n %u", precision: 0) : "-" %>
+        </div>
+        <% if @project.description.present? %>
+          <div>
+            <strong>Description:</strong><br>
+            <p class="text-mute-700"><%= truncate(@project.description, length: 200) %></p>
+          </div>
+        <% end %>
+      </div>
+      <div class="mt-4 pt-4 border-t paragraph-xs text-mute-500">
+        Cree le <%= @project.created_at.strftime("%d/%m/%Y") %>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

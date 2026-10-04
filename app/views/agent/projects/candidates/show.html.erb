@@ -1,0 +1,168 @@
+<div class="container mx-auto">
+
+<div class="mb-4">
+  <%= link_to agent_project_path(@project), class: "button-link button-md" do %>
+    <%= inline_svg_tag "icons/arrow-left.svg", class: "w-4 sm:w-5" %>
+    Retour au projet
+  <% end %>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 space-y-4">
+    <%# Header card with candidate info %>
+    <div class="card-secondary">
+      <div class="flex gap-4">
+        <div class="w-16 h-16 rounded-full bg-mute-300 flex items-center justify-center text-mute-800 text-xl font-bold">
+          <%= @project_candidate.candidate.initials %>
+        </div>
+        <div>
+          <h1 class="title-4"><%= @project_candidate.candidate.full_name %></h1>
+          <p class="paragraph-sm text-mute-700">
+            <%= @project_candidate.candidate.total_experience_in_years || "?" %> ans d'expérience
+            <% if @project_candidate.candidate.position.present? %>
+              en <%= @project_candidate.candidate.position.downcase %>
+            <% end %>
+          </p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <% case @project_candidate.status %>
+            <% when "matched" %>
+              <%= render TagComponent.new(kind: :black) do %>À valider<% end %>
+            <% when "pushed" %>
+              <%= render TagComponent.new(kind: :primary) do %>Présenté<% end %>
+            <% when "interested" %>
+              <%= render TagComponent.new(kind: :success) do %>Intérêt<% end %>
+            <% when "rejected" %>
+              <%= render TagComponent.new(kind: :neutral) do %>Rejeté<% end %>
+            <% end %>
+            <%= render Candidate::AvailabilityComponent.new(candidate: @project_candidate.candidate) %>
+            <% if @project_candidate.candidate.city.present? %>
+              <%= render TagComponent.new do %><%= @project_candidate.candidate.city %><% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Analysis card %>
+    <div class="card-secondary">
+      <h2 class="label-md mb-4">Analyse du profil</h2>
+
+      <% if @project_candidate.summary.present? %>
+        <div class="paragraph-xs mb-4">
+          <%= sanitize md_to_html(@project_candidate.summary) %>
+        </div>
+      <% end %>
+
+      <% if @project_candidate.strengths.any? %>
+        <div class="bg-success-100 p-3 rounded-lg mb-4">
+          <strong class="text-success-700">Points forts</strong>
+          <ul class="mt-2 ml-4 list-disc paragraph-xs">
+            <% @project_candidate.strengths.each do |strength| %>
+              <li><%= markdown_inline(strength) %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if @project_candidate.attention_points.any? %>
+        <div class="bg-peach p-3 rounded-lg">
+          <strong>Points d'attention</strong>
+          <ul class="mt-2 ml-4 list-disc paragraph-xs">
+            <% @project_candidate.attention_points.each do |point| %>
+              <li><%= markdown_inline(point) %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if @project_candidate.summary.blank? && @project_candidate.strengths.empty? && @project_candidate.attention_points.empty? %>
+        <p class="paragraph-xs text-mute-500">L'analyse du profil sera disponible prochainement.</p>
+      <% end %>
+    </div>
+
+    <%# Client interest section %>
+    <% if @project_candidate.interested? %>
+      <% customer = @project.customer %>
+      <div class="card-secondary border-success-500">
+        <h2 class="label-md text-success-700 mb-4">Client intéressé</h2>
+        <% if @project_candidate.interest_message.present? %>
+          <div class="mb-3 paragraph-xs">
+            <strong>Message:</strong>
+            "<%= @project_candidate.interest_message %>"
+          </div>
+        <% end %>
+        <div class="paragraph-xs mb-3">
+          <strong>Coordonnées:</strong><br>
+          <%= customer.full_name %><br>
+          <%= mail_to customer.email, customer.email, class: "text-success-700 underline" %>
+          <% if customer.phone_number.present? %>
+            <br><%= customer.phone_number %>
+          <% end %>
+        </div>
+        <%= mail_to customer.email, "Contacter le client", class: "button-primary button-sm" %>
+      </div>
+    <% end %>
+
+    <%# Rejection section %>
+    <% if @project_candidate.rejected? && @project_candidate.interest_message.present? %>
+      <div class="card-secondary">
+        <h2 class="label-md text-red-700 mb-4">Motif du rejet</h2>
+        <p class="paragraph-xs"><%= @project_candidate.interest_message %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="space-y-4">
+    <%# Actions card %>
+    <div class="card-secondary">
+      <h2 class="label-md mb-4">Actions</h2>
+      <%= link_to "Voir le profil complet", agent_candidate_path(@project_candidate.candidate), class: "button-secondary w-full text-center mb-2", target: "_blank" %>
+
+      <% if @project_candidate.matched? && @project_candidate.analysis_ready? %>
+        <% if @project_candidate.questions_required? %>
+          <%= link_to "Répondre aux questions", questions_agent_project_candidate_path(@project, @project_candidate), class: "button-primary w-full text-center mb-2" %>
+        <% else %>
+          <%= link_to "Présenter au client", push_agent_project_candidate_path(@project, @project_candidate), class: "button-primary w-full text-center mb-2", data: { turbo_frame: "modal" } %>
+        <% end %>
+        <%= button_to "Rejeter", cancel_agent_project_candidate_path(@project, @project_candidate), method: :post, class: "button-ghost w-full text-center", data: { turbo_confirm: "Confirmer le rejet de ce candidat ?" } %>
+      <% end %>
+
+      <% if @project_candidate.pushed? %>
+        <div class="text-center paragraph-xs text-mute-500">
+          Présenté le <%= @project_candidate.pushed_at&.strftime("%d/%m/%Y") %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Candidate info card %>
+    <div class="card-secondary">
+      <h2 class="label-md mb-4">Informations candidat</h2>
+      <div class="space-y-3 paragraph-xs">
+        <% if @project_candidate.candidate.skills.any? %>
+          <div>
+            <strong>Compétences:</strong>
+            <div class="flex flex-wrap gap-1 mt-1">
+              <% @project_candidate.candidate.skills.each do |skill| %>
+                <%= render TagComponent.new do %><%= skill.name %><% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Project info card %>
+    <div class="card-secondary">
+      <h2 class="label-md mb-4">Projet</h2>
+      <div class="space-y-2 paragraph-xs">
+        <p><strong><%= @project.title %></strong></p>
+        <p class="text-mute-500"><%= @project.client_name %></p>
+        <% if @project_candidate.pushed_at %>
+          <p class="text-mute-500">Présenté le <%= @project_candidate.pushed_at.strftime("%d/%m") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

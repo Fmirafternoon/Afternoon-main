@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "Résumé de l'adéquation candidat-projet (80-120 mots)"
+    },
+    "strengths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Liste de 2-3 points forts du candidat pour ce poste"
+    },
+    "attention_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Liste de 1-2 points d'attention ou écarts avec le profil"
+    }
+  },
+  "required": ["summary", "strengths", "attention_points"],
+  "additionalProperties": false
+}

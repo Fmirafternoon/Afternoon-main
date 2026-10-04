@@ -1,0 +1,35 @@
+<div class="md:m-4.5 mb-10 py-4 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-y-4 rounded-3xl bg-mute-200">
+  <div class="space-x-3 sm:space-x-10 flex items-center">
+    <% if cancel_path.present? %>
+      <%= link_to cancel_path, class: "button-link button-md" do %>
+        <%= inline_svg_tag "icons/arrow-left.svg", class: " w-4 sm:w-5" %>
+        <span class="hidden md:block">
+          Annuler
+        </span>
+      <% end %>
+    <% else %>
+      <div class=""></div>
+    <% end %>
+
+    <h4 class="title-4 text-lg sm:text-xl">
+      <%= title %>
+    </h4>
+  </div>
+  <div class="hidden md:flex items-center space-x-2 sm:space-x-3 self-end sm:self-auto">
+    <% if show_previous_button? %>
+      <%= link_to previous_path, class: "button-secondary button-md" do %>
+        Précédent
+      <% end %>
+    <% end %>
+
+    <% if show_finish_button? %>
+      <%= button_tag "Terminé", name: "finish", value: "1", class: "button-secondary button-md" %>
+    <% end %>
+
+    <% if current_step == wizard_steps.last %>
+      <%= button_tag "Terminer", name: "next_step", class: "button-primary button-md w-full" %>
+    <% else %>
+      <%= button_tag "Suivant", name: "next_step", class: "button-primary button-md w-full" %>
+    <% end %>
+  </div>
+</div>

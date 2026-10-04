@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render "head" %>
+  </head>
+
+  <body class="antialiased">
+    <%= render "impersonation" %>
+    <main>
+      <%= render 'notifications', notice: notice, alert: alert %>
+
+      <%= render "customer/navigation" %>
+      <div class="m-4.5">
+        <%= yield %>
+      </div>
+    </main>
+    <%= render ModalComponent.new %>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+attributes:
+  - primary_keys
+  - content
+  - foreign_key
+  - inheritance
+  - timestamps
+disconnected: true
+filename: afternoon_db
+filetype: pdf
+indirect: true
+inheritance: true
+markup: true
+notation: simple
+orientation: horizontal
+polymorphism: true
+sort: false
+warn: true
+title: true
+exclude: "Record, ActiveRecord::InternalMetadata, ActiveRecord::SchemaMigration, ActiveStorage::Record, ApplicationRecord, ActiveStorage::Attachment, ActiveStorage::Blob, ActionText::RichText, ActionMailbox::InboundEmail, ActiveStorage::VariantRecord, ActionText::Record, ActionMailbox::Record, ActionText::RichText, ActionMailbox::InboundEmail, Etl::Artrenov::Agency, Etl::Artrenov::Category, Etl::Artrenov::Contact, Etl::Artrenov::ContractProduct, Etl::Artrenov::Customer, Etl::Artrenov::Domain, Etl::Artrenov::FundingOrganization, Etl::Artrenov::Product, Etl::Artrenov::User, Etl::Artrenov::Vat, InternalMetadata, Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler"
+only: null
+only_recursion_depth: null
+prepend_primary: true
+cluster: false
+splines: spline

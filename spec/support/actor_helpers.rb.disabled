@@ -1,0 +1,20 @@
+module ActorHelpers
+  # Helper method to easily test actors
+  def actor_result
+    described_class.call(**actor_inputs)
+  end
+
+  # Override this method in your spec to provide inputs
+  def actor_inputs
+    {}
+  end
+end
+
+RSpec.configure do |config|
+  config.include ActorHelpers, type: :actor
+
+  # Automatically infer the spec type for actors
+  config.define_derived_metadata(file_path: Regexp.new('/spec/actors/')) do |metadata|
+    metadata[:type] = :actor
+  end
+end

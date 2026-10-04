@@ -1,0 +1,12 @@
+<% if current_user != true_user && true_user&.super_admin? %>
+  <div class="sticky top-0 left-0 right-0 z-50 bg-black text-primary px-4 py-2 flex justify-between items-center">
+    <span>
+      ⚠️ Connecté en tant que <strong><%= current_user.email %></strong>
+      <i>
+        (<%= User.human_enum_name(:role, current_user.role) %>)
+      </i>
+    </span>
+
+    <%= link_to "Stop", admin_impersonation_path(current_user.id), data: { turbo_method: :delete }, class: "button-ghost text-white border-white hover:bg-white/20 button-xs" %>
+  </div>
+<% end %>

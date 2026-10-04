@@ -1,0 +1,6 @@
+<div class="mb-8" id="saved-searches-section">
+  <h3 class="title-3 mb-6">
+    Mes recherches
+  </h3>
+  <%= render "customer/candidates/saved_searches_list", saved_searches: saved_searches, active_saved_search_id: defined?(active_saved_search_id) ? active_saved_search_id : nil %>
+</div>

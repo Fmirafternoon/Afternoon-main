@@ -1,0 +1,82 @@
+<div class="container mx-auto">
+
+<div class="flex justify-between items-center mb-4">
+  <div class="title-3">
+    Projets de recrutement (<%= @counts[:all] %>)
+  </div>
+
+  <div class="button-group">
+    <%= active_link_to "Tous", agent_projects_path, class: "", active: { filter: nil } %>
+    <%= active_link_to "À traiter (#{@counts[:to_validate]})", agent_projects_path(filter: "to_validate"), class: "", active: { filter: "to_validate" } %>
+    <%= active_link_to "Interêts (#{@counts[:with_interests]})", agent_projects_path(filter: "interests"), class: "", active: { filter: "interests" } %>
+  </div>
+
+</div>
+
+<div class="card-primary p-0 overflow-hidden">
+  <table class="w-full">
+    <thead class="bg-mute-300">
+      <tr>
+        <th class="table-header">Projet</th>
+        <th class="table-header">Client</th>
+        <th class="table-header">Candidats</th>
+        <th class="table-header">Statut</th>
+        <th class="table-header"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @projects.each do |project| %>
+        <tr class="hover:bg-mute-100">
+          <td class="table-cell">
+            <div class="label-sm"><%= project.title %></div>
+            <div class="paragraph-xs text-mute-700">
+              <%= project.contract_type %> - Crée le <%= project.created_at.strftime("%d/%m") %>
+            </div>
+          </td>
+          <td class="table-cell">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-mute-300 flex items-center justify-center text-mute-800 text-xs font-bold">
+                <%= project.client_initials %>
+              </div>
+              <span><%= project.client_name %></span>
+            </div>
+          </td>
+          <td class="table-cell">
+            <% if project.candidates_to_validate_count > 0 %>
+              <%= render TagComponent.new(kind: :black) do %>
+                <%= project.candidates_to_validate_count %> a valider
+              <% end %>
+            <% end %>
+            <% if project.candidates_pushed_count > 0 %>
+              <span class="paragraph-xs text-mute-700"><%= project.candidates_pushed_count %> présenté(s)</span>
+            <% end %>
+            <% if project.candidates_to_validate_count == 0 && project.candidates_pushed_count == 0 %>
+              <span class="paragraph-xs text-mute-500">Aucun candidat</span>
+            <% end %>
+          </td>
+          <td class="table-cell">
+            <% if project.candidates_interested_count > 0 %>
+              <%= render TagComponent.new(kind: :success) do %>
+                <%= project.candidates_interested_count %> interêt(s)
+              <% end %>
+            <% else %>
+              <%= render TagComponent.new(kind: :neutral) do %>
+                En attente
+              <% end %>
+            <% end %>
+          </td>
+          <td class="table-cell">
+            <%= link_to "Gerer", agent_project_path(project), class: "button-primary" %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @projects.empty? %>
+        <tr>
+          <td colspan="5" class="table-cell text-center text-mute-700">
+            Aucun projet actif pour le moment.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

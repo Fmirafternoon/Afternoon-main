@@ -1,0 +1,92 @@
+<%= simple_form_for @form, url: customer_project_wizard_path(@project, step), as: :wizard_form, method: :put do |f| %>
+  <div class="container mx-auto px-4 py-8" style="max-width:600px">
+    <div class="mb-4">
+      <div class="flex justify-between text-sm mb-2">
+        <span class="font-bold">Étape 2/3</span>
+        <span class="text-gray-500">Critères de recherche</span>
+      </div>
+      <div class="bg-gray-200 rounded-full h-2">
+        <div class="bg-primary h-2 rounded-full" style="width:66%"></div>
+      </div>
+    </div>
+
+    <h1 class="title-2 mb-2">Définissez vos critères</h1>
+    <p class="text-gray-500 mb-6">Ces critères nous permettent d'affiner la recherche de candidats.</p>
+
+
+    <div class=" p-6 pb-0 mb-4">
+      <div class="mb-4">
+        <label class="label">Compétences recherchées <span class="text-red-500">*</span></label>
+        <%= render "customer/projects/wizard/add_skill_form", project: @project, skills: @skills %>
+        <% if @skills.any? %>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <% @skills.each do |skill| %>
+              <%= link_to customer_project_wizard_path(@project, :step2, skills: @skills.reject { |s| s == skill }, editing_skills: true),
+                          class: "inline-flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm",
+                          data: { turbo_frame: "_top" } do %>
+                <span class="mr-1"><%= skill["name"] %></span>
+                <% if skill["required"] %>
+                    <span class="mr-1 text-xs font-semibold text-blue-600">(Obligatoire)</span>
+                <% end %>
+                <% if skill["seniority"].present? %>
+                    <span class="mr-1 text-xs text-gray-500"><%= t("enums.project_skill.seniority.#{skill["seniority"]}") %></span>
+                <% end %>
+                <span class="text-red-500">&times;</span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <% @skills.each do |skill| %>
+          <%= hidden_field_tag "wizard_form[skills][][name]", skill["name"] %>
+          <%= hidden_field_tag "wizard_form[skills][][required]", skill["required"] ? "1" : "0" %>
+          <%= hidden_field_tag "wizard_form[skills][][seniority]", skill["seniority"] %>
+        <% end %>
+      
+
+
+
+        <% if @form.errors[:skills].any? %>
+          <p class="mt-2 text-red-500 text-xs italic"><%= @form.errors[:skills].first %></p>
+        <% end %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.input :min_experience_years, as: :select, label: "Expérience minimum", collection: [["+2 ans", 2], ["+5 ans", 5], ["+10 ans", 10]], prompt: "Peu importe", input_html: { style: "max-width:200px" } %>
+      </div>
+
+
+
+      
+
+
+
+
+
+    </div>
+
+    <div class=" p-6">
+      <div class="mb-4">
+        <div class="">
+          <label class="block label mb-2">Disponibilité souhaitée <span class="text-red-500">*</span></label>
+          <div class="button-group" data-controller="radio-buttons">
+            <% [["Immédiate", "immediate"], ["< 1 mois", "within_1_month"], ["< 3 mois", "within_3_months"], ["Flexible", "flexible"]].each do |label, value| %>
+              <label class="<%= @form.desired_availability == value ? 'active' : '' %>" data-radio-buttons-target="label" data-action="click->radio-buttons#select">
+                <%= f.radio_button :desired_availability, value, class: "hidden", data: { radio_buttons_target: "input" } %>
+                <%= label %>
+              </label>
+            <% end %>
+          </div>
+          <% if @form.errors[:desired_availability].any? %>
+            <p class="mt-2 text-red-500 text-xs italic"><%= @form.errors[:desired_availability].first %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <%= link_to "← Retour", previous_wizard_path, class: "button-secondary" %>
+      <%= f.submit "Continuer →", class: "button-primary" %>
+    </div>
+  </div>
+<% end %>

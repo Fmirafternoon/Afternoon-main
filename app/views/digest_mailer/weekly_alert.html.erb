@@ -1,0 +1,117 @@
+<h2 style="margin: 0 0 8px; font-size: 22px; font-weight: 600; color: #092E46;">
+  <%= @total_candidates %> <%= @total_candidates == 1 ? 'nouveau candidat' : 'nouveaux candidats' %> cette semaine
+</h2>
+<p style="margin: 0 0 24px; font-size: 14px; color: #666;">
+  Bonjour <%= @customer.first_name %>, voici vos nouvelles opportunités
+</p>
+
+<% @alerts_data.each_with_index do |alert_data, index| %>
+  <% search = alert_data[:search] %>
+  <% candidates = alert_data[:candidates] %>
+  <% total_count = alert_data[:total_count] %>
+
+  <div style="margin-bottom: 32px;">
+    <!-- Search header -->
+    <div style="margin-bottom: 20px;">
+      <p style="margin: 0 0 4px; color: #092E46; font-size: 18px; font-weight: 600;">
+        <%= search.name %>
+      </p>
+      <p style="margin: 0; color: #666; font-size: 13px;">
+        <%= total_count %> <%= total_count == 1 ? 'nouveau candidat' : 'nouveaux candidats' %> correspondent à vos critères
+      </p>
+    </div>
+
+    <!-- Candidates -->
+    <% candidates.each do |candidate| %>
+      <div style="border: 1px solid #E0DEDB; border-radius: 8px; padding: 16px; margin-bottom: 12px; background-color: #FAFBFC;">
+        <p style="margin: 0 0 4px; font-weight: 600; font-size: 16px; color: #092E46;">
+          <%= candidate.first_name %> <%= candidate.last_name %>
+        </p>
+        <p style="margin: 0 0 8px; color: #666; font-size: 14px;">
+          <%= candidate.position %>
+        </p>
+        <span style="display: inline-block; background-color: #B2F9AF; color: #107346; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+          Disponible
+        </span>
+
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 12px;">
+          <tr>
+            <td style="padding: 4px 0; font-size: 13px; color: #092E46; font-weight: 600; width: 120px;">Localisation</td>
+            <td style="padding: 4px 0; font-size: 13px; color: #666;"><%= candidate.city || "Non renseigné" %></td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 0; font-size: 13px; color: #092E46; font-weight: 600;">Expérience</td>
+            <td style="padding: 4px 0; font-size: 13px; color: #666;"><%= candidate.total_experience_in_years %> ans</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 0; font-size: 13px; color: #092E46; font-weight: 600;">Contact</td>
+            <td style="padding: 4px 0; font-size: 13px; color: #666;"><%= candidate.email %></td>
+          </tr>
+          <% if candidate.phone_number.present? %>
+            <tr>
+              <td style="padding: 4px 0; font-size: 13px; color: #092E46; font-weight: 600;">Téléphone</td>
+              <td style="padding: 4px 0; font-size: 13px; color: #666;"><%= candidate.phone_number %></td>
+            </tr>
+          <% end %>
+        </table>
+
+        <% if candidate.skills.any? %>
+          <div style="margin-top: 12px;">
+            <% candidate.skill_names.first(5).each do |skill| %>
+              <span style="display: inline-block; background-color: #f5f5f5; color: #092E46; padding: 4px 10px; border-radius: 12px; font-size: 12px; margin: 2px; border: 1px solid #E0DEDB;">
+                <%= skill %>
+              </span>
+            <% end %>
+            <% if candidate.skills.count > 5 %>
+              <span style="display: inline-block; background-color: #f5f5f5; color: #092E46; padding: 4px 10px; border-radius: 12px; font-size: 12px; margin: 2px; border: 1px solid #E0DEDB;">
+                +<%= candidate.skills.count - 5 %>
+              </span>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div style="margin-top: 16px;">
+          <a href="<%= customer_candidate_url(candidate) %>"
+             style="display: inline-block; background-color: #E5E500; color: #092E46; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px;">
+            Voir le profil
+          </a>
+        </div>
+      </div>
+    <% end %>
+
+    <% if total_count > candidates.count %>
+      <div style="text-align: center; margin-top: 16px; padding: 16px; background-color: #f5f5f5; border-radius: 8px;">
+        <p style="margin: 0 0 12px; color: #666; font-size: 14px;">
+          Et <%= total_count - candidates.count %> autres <%= (total_count - candidates.count) == 1 ? 'candidat correspond' : 'candidats correspondent' %> à "<%= search.name %>"
+        </p>
+        <a href="<%= load_customer_saved_search_url(search) %>"
+           style="display: inline-block; background-color: #E5E500; color: #092E46; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px;">
+          Voir tous les résultats
+        </a>
+      </div>
+    <% end %>
+
+    <p style="text-align: center; margin-top: 12px; font-size: 11px;">
+      <a href="<%= unsubscribe_saved_search_url(search, token: Rails.application.message_verifier(:unsubscribe).generate({ saved_search_id: search.id, expires_at: 30.days.from_now })) %>"
+         style="color: #999; text-decoration: underline;">
+        Se désabonner de cette recherche
+      </a>
+    </p>
+  </div>
+
+  <% if index < @alerts_data.size - 1 %>
+    <hr style="border: none; border-top: 1px solid #E0DEDB; margin: 24px 0;">
+  <% end %>
+<% end %>
+
+<div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E0DEDB; text-align: center;">
+  <p style="margin: 0 0 8px; color: #666; font-size: 12px;">
+    Vous recevez cet email car vous avez activé les alertes pour vos recherches sauvegardées.
+  </p>
+  <p style="margin: 0; color: #666; font-size: 12px;">
+    <a href="<%= unsubscribe_all_saved_searches_url(token: @unsubscribe_token) %>"
+       style="color: #092E46; text-decoration: underline; font-weight: 600;">
+      Se désabonner de toutes les alertes
+    </a>
+  </p>
+</div>

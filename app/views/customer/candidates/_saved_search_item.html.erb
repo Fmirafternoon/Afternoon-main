@@ -1,0 +1,4 @@
+<%= render SavedSearchItemComponent.new(
+  saved_search: saved_search,
+  active: @active_saved_search_id.to_s == saved_search.id.to_s
+) %>

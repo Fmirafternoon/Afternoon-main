@@ -1,0 +1,39 @@
+<div class="bg-mute-400 py-3.5">
+  <div class="flex grow justify-between items-center relative max-w-7xl mx-auto py-4 px-3 md:px-6 lg:px-12" data-controller="dropdown" data-dropdown-hidden-class="hidden">
+
+    <div class="">
+      <%= render LogoComponent.new(size: :xl) %>
+    </div>
+
+    <!-- Mobile menu button -->
+    <button data-action="dropdown#toggle" data-dropdown-target="button" type="button" class="md:hidden inline-flex items-center p-2 w-10 h-10 button-ghost" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Ouvrir le menu</span>
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+      </svg>
+    </button>
+
+    <!-- Navigation menu -->
+    <div class="hidden z-30 bg-mute-400 p-4 pt-0 md:p-0 rounded-b-3xl shadow-lg md:shadow-none md:rounded-b-none absolute top-full left-0 md:relative w-full md:flex md:w-auto md:items-center md:space-x-10 text-lg" id="navbar-menu" data-dropdown-target="menu">
+      <div class="gap-y-4 md:gap-y-0 font-medium text-center flex flex-col justify-center items-centerp-4 md:p-0 mt-4 rounded-lg bg-mute-400 md:flex-row md:space-x-8 md:mt-0">
+        <% if user_signed_in? %>
+          <% if current_user.super_admin? %>
+            <%= link_to "Admin", admin_users_path, target: "_top", class: "link-navigation block py-2 px-3 md:p-0" %>
+          <% end %>
+
+          <% if current_user.agent_manager? || current_user.agent_user? %>
+            <%= link_to "Mon espace", agent_candidates_path, class: "button-ghost button-md" %>
+          <% end %>
+
+          <% if current_user.customer? %>
+            <%= link_to "Mon espace", customer_candidates_path, class: "button-ghost button-md" %>
+          <% end %>
+        <% else %>
+          <%= link_to "Réserver une démo", ENV.fetch("CALENDLY_URL"), target: "_blank", class: "hide-link-icon button-primary button-md block py-2 px-3 md:py-0 md:px-0" %>
+          <%= link_to "Connexion", new_user_session_path, target: "_top", class: "link-navigation block py-2 px-3 md:p-0" %>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>

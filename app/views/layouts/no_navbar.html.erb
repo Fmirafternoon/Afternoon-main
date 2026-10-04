@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render "head" %>
+  </head>
+
+  <body class="antialiased">
+    <%= render "impersonation" %>
+    <main>
+      <%= render 'notifications', notice: notice, alert: alert %>
+      <div class="m-4.5">
+        <%= yield %>
+      </div>
+    </main>
+  </body>
+</html>

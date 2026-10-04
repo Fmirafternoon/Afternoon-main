@@ -1,0 +1,360 @@
+<%= turbo_stream_from "candidate_#{@candidate.id}_updates" %>
+
+<div class="container mx-auto">
+
+  <div class="flex justify-between items-center mb-6">
+    <%= link_to customer_candidates_path, class: "button-link button-md" do %>
+      <%= inline_svg_tag "icons/arrow-left.svg", class: "w-4 sm:w-5" %>
+      Retour à la liste des candidats
+    <% end %>
+  </div>
+
+  <div class="flex flex-col md:grid grid-cols-3 gap-y-4 md:gap-x-8">
+
+    <!-- Actions -->
+    <div class="order-1 card-primary flex flex-col gap-y-4">
+      <div class="flex items-center flex-row gap-x-4.5">
+        <%= render User::AvatarComponent.new(user: @candidate.agent) %>
+
+        <div>
+          <div class="paragraph-sm text-mute-900">
+            <%= @candidate.agent.first_name %> <%= @candidate.agent.last_name.first %>.
+          </div>
+          <div class="paragraph-xs text-mute-900">
+            <%= @candidate.agent.description %>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="label-lg">
+          <%= number_to_currency @candidate.recruitment_commission, precision: 0 %>
+        </div>
+        <div class="paragraph-xs">
+          Coût du profil si embauché
+        </div>
+      </div>
+
+      <%= render "customer/candidates/basket_button", candidate: @candidate %>
+    </div>
+
+    <!-- Header -->
+    <div class="col-span-2 order-2 card-primary flex flex-col gap-y-4">
+      <div class="flex items-center gap-x-2 mb-2">
+        <%= render Candidate::ContractComponent.new(candidate: @candidate) %>
+        <%= render Candidate::AvailabilityComponent.new(candidate: @candidate) %>
+      </div>
+      <div class="title-2">
+        <%= @candidate.position %>
+      </div>
+      <div class="grow mt-2.5 inline-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-12 gap-y-4 mr-32">
+
+        <% if @candidate.age.present? %>
+          <div>
+            <p class="paragraph-sm text-mute-900 mb-2">
+              Age
+          </p>
+          <p class="label-sm">
+            <%= @candidate.age %> ans
+          </p>
+        </div>
+        <% end %>
+
+        <% if @candidate.total_experience_in_years.present? %>
+          <div>
+            <p class="paragraph-sm text-mute-900 mb-2">
+              Éxpérience
+          </p>
+          <p class="label-sm">
+            <%= @candidate.total_experience_in_years %> ans
+            </p>
+          </div>
+        <% end %>
+
+        <% if @candidate.location.present? %>
+          <div>
+            <p class="paragraph-sm text-mute-900 mb-2">
+                Localisation
+            </p>
+            <p class="label-sm break-words">
+              <%= @candidate.location.city %>
+              <%= @candidate.location.zip_code %>
+            </p>
+          </div>
+        <% end %>
+
+        <% if @candidate.salary_expectation.present? %>
+          <div>
+            <p class="paragraph-sm text-mute-900 mb-2">
+                Prétentions&nbsp;salariales
+            </p>
+            <p class="label-sm">
+              <%= number_to_currency @candidate.salary_expectation, precision: 0 %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 mt-4">
+        <div>
+          <p class="paragraph-xs text-mute-900">
+            Mis en ligne le <%= datetime @candidate.published_at %>
+          </p>
+        </div>
+        <div class="flex gap-x-2">
+          <%#= link_to agent_candidate_wizard_path(@candidate, :personal_info), class: "md:w-auto w-full button-primary" do %>
+            <%# Modifier le candidat %>
+          <%# end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="order-4 md:order-3 flex flex-col gap-y-4">
+
+      <!-- Sectors -->
+      <div class="card-secondary flex flex-col gap-y-6">
+        <div class="flex justify-between items-center group">
+          <h5 class="label-md">
+            Secteurs d'activité
+          </h5>
+        </div>
+
+        <% if @candidate.sectors.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.sectors.each do |sector| %>
+              <div class="paragraph-sm inline-flex items-center bg-primary-100 rounded-full px-3 py-1">
+                <%= sector.name %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Skills and languages -->
+      <div class="card-secondary flex flex-col gap-y-6">
+        <div class="flex justify-between items-center group">
+          <h5 class="label-md">
+            Compétences
+          </h5>
+        </div>
+
+        <% if @candidate.candidate_skills.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.candidate_skills.each do |candidate_skill| %>
+              <div class="paragraph-sm inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <%= candidate_skill.skill.name %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune compétence ajoutée pour le moment.</p>
+        <% end %>
+
+        <% if @candidate.candidate_languages.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.candidate_languages.map do |candidate_language| %>
+              <div class="paragraph-sm inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <%= candidate_language.name %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune langue ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+      <!-- Mobility -->
+      <div class="card-secondary flex flex-col gap-y-6">
+        <p class="label-md">Mobilité</p>
+
+        <% if @candidate.has_driving_license || @candidate.has_a_car %>
+          <div class="flex flex-wrap gap-2">
+            <% if @candidate.has_driving_license%>
+              <div class="paragraph-sm inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                🪪 Permis B
+              </div>
+            <% end %>
+            <% if @candidate.has_a_car %>
+              <div class="paragraph-sm inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                🚙 Véhicule personnel
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="flex flex-wrap gap-2">
+          <% @candidate.candidate_mobilities.each do |mobility| %>
+            <div class="paragraph-sm inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+              <%= mobility.location.name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="card-secondary flex flex-col gap-y-6">
+        <div class="flex justify-between items-center group">
+          <h5 class="label-md">
+            Parcours de formation
+          </h5>
+        </div>
+
+        <% @candidate.educations.each do |education| %>
+          <div>
+            <div class="paragraph-sm text-mute-800">
+              <%= education.from_date %>
+              <% if education.to_date.present? && education.from_date.present? %>
+                -
+              <% end %>
+              <%= education.to_date %>
+            </div>
+            <h3 class="label-sm"><%= education.title %></h3>
+            <p class="paragraph-sm">
+              <%= education.issuing_organization %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Trainings -->
+      <% if @candidate.trainings.any? %>
+        <div class="card-secondary flex flex-col gap-y-6">
+          <div class="flex justify-between items-center group">
+            <h5 class="label-md">
+              Diplômes et certifications
+            </h5>
+          </div>
+
+          <% @candidate.trainings.each do |training| %>
+            <div>
+              <div class="paragraph-sm text-mute-800">
+                <%= training.year %>
+              </div>
+              <h3 class="label-sm"><%= training.title %></h3>
+              <p class="paragraph-sm">
+                <%= training.issuing_organization %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+    </div>
+
+
+    <div class="col-span-2 order-3 md:order-4 flex flex-col gap-y-4">
+<!--
+      <% if @candidate.red_flags.any? %>
+        <div class="my-6 group flex flex-col gap-y-4">
+          <h5 id="red-flags" class="title-4">
+            Points d'attention
+          </h5>
+          <% @candidate.red_flags.each do |red_flag| %>
+            <div class="card bg-peach flex flex-col gap-y-4">
+              <div class="paragraph-sm font-semibold flex justify-between items-start gap-x-4">
+                <%= red_flag.question %>
+              </div>
+              <div class="">
+                <h5 class="title-5 text-orange-800/70 text-sm">Réponse</h5>
+                <%= simple_format red_flag.answer %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+-->
+      <% if @candidate.resume_summary.select { |_k, value| value.present? }.any? || @candidate.description.present? %>
+        <div class="card-secondary">
+          <div class="mb-6 group">
+            <div class="flex flex-col gap-y-4">
+              <h5 class="title-4 my-4">
+                Résumé du profil
+              </h5>
+              <% if @candidate.description.present? %>
+                <%= @candidate.description %>
+              <% end %>
+
+              <% if @candidate.career_relevance.present? %>
+                <div class="paragraph-sm">
+                  <h3 class="title-5 text-mute-800">
+                    Pertinence du parcours professionnel
+                  </h5>
+                  <%= simple_format @candidate.career_relevance %>
+                </div>
+              <% end %>
+
+
+              <% @candidate.resume_summary.select { |_k, value| value.present? }.each do |key, value| %>
+                <div class="paragraph-sm">
+                  <h3 class="title-5 text-mute-800">
+                    <%= t "activerecord.attributes.candidate.resume_summary.#{key}" %>
+                  </h3>
+                  <div>
+                    <% if value.class == Array %>
+                      <ul class="list-disc list-inside pl-4">
+                        <% value.each do |item| %>
+                          <li><%= item %></li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <%= value %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+
+      <% if @candidate.employments.any? %>
+        <!-- Employments -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-6 group">
+            <h5 class="title-5 text-mute-800">
+              Éxpériences professionnelles
+            </h5>
+          </div>
+
+          <div class="flex flex-col gap-6">
+            <% @candidate.employments.each do |employment| %>
+              <div>
+                <div class="paragraph-sm text-mute-800">
+                  <% if employment.from_date.present? && employment.to_date.present? %>
+                    <%= l Date.parse(employment.from_date), format: "%Y" %>
+                    - <%= l Date.parse(employment.to_date), format: "%Y" %>
+                  <% end %>
+                </div>
+                <h3 class="label-md"><%= employment.title %></h3>
+                <p class="paragraph-sm">
+                  <%#= employment.company %>
+                  <%= employment.location %>
+                </p>
+                <p class="paragraph-sm mt-2">
+                  <%= simple_format employment.description %>
+                </p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @candidate.referrals.any? %>
+        <!-- Referrals -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-6 group">
+            <h5 class="title-5 text-mute-800">
+              Références
+            </h5>
+          </div>
+
+          <div class="flex flex-col gap-6">
+            <%= @candidate.referrals.count %> <%= "référence".pluralize(@candidate.referrals.count) %> disponible
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<% if project.last_email_broadcasted_at.present? %>
+  <%= render TagComponent.new(kind: :success) do %>Diffusé le <%= project.last_email_broadcasted_at.strftime("%d/%m/%Y") %><% end %>
+<% elsif project.broadcast_enabled? %>
+  <%= render TagComponent.new(kind: :neutral) do %>Diffusion activée<% end %>
+<% else %>
+  <%= render TagComponent.new(kind: :neutral) do %>Non diffusé<% end %>
+<% end %>

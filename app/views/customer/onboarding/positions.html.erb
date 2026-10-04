@@ -1,0 +1,49 @@
+<%= simple_form_for @form, url: customer_onboarding_path(step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Bienvenue à bord !",
+    current_step: step,
+    wizard_steps: wizard_steps,
+    previous_path: previous_wizard_path
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :customer_onboarding,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path
+  ) do |step_component| %>
+    <%
+      step_component.with_breadcrumb(
+        wizard: :customer_onboarding,
+        wizard_steps:,
+        current_step: step,
+        description: "Nous avons besoin de quelques informations pour vous permettre d'accéder à votre espace client.",
+      )
+    %>
+
+      <h3 class="col-span-2 title-5 mb-2">Les postes</h3>
+      <div class="col-span-2 flex items-start space-x-2">
+        <%= f.input :title, label: "Nouveau poste", wrapper_html: { class: "w-full grow" } %>
+        <%= button_tag "Ajouter", type: "submit", name: "commit", value: "add_position", class: "button-ghost button-xl" %>
+      </div>
+
+      <div class="col-span-2 mt-2">
+        <% if current_user.company&.positions&.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% current_user.company.positions.each do |position| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1"><%= position.title %></span>
+                <%= link_to "&times;".html_safe,
+                    customer_company_position_path(position),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce poste ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucun poste ajouté pour le moment.</p>
+        <% end %>
+      </div>
+  <% end %>
+<% end %>

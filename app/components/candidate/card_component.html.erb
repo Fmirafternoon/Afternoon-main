@@ -1,0 +1,94 @@
+<div class="relative <%= card_class %> border rounded-2xl flex flex-col">
+  <div class="grow p-4.5">
+
+    <div class="flex items-center justify-between">
+      <div>
+        <%= render Candidate::AvailabilityComponent.new(candidate: candidate) %>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= render Candidate::ContractComponent.new(candidate: candidate) %>
+      </div>
+    </div>
+
+    <div class="label-lg mt-3 line-clamp-2 min-h-14">
+      <%= candidate.position %>
+    </div>
+
+    <div class="mt-1 grow items-end flex space-x-4.5 paragraph-xs text-black">
+      <% if candidate.location.present? %>
+        <div class="flex items-center space-x-1">
+          <%= inline_svg_tag "icons/pin.svg", class:"w-4.5" %>
+          <%= candidate.location.city %>
+          <%= candidate.location.zip_code %>
+        </div>
+      <% end %>
+      <% if candidate.total_experience_in_years.present? %>
+        <div>
+          <span class="font-extrabold text-mute-700">
+            XP
+          </span>
+          <%= candidate.total_experience_in_years %>&nbsp;ans
+        </div>
+      <% end %>
+
+      <% if candidate.salary_expectation.present? %>
+        <div>
+          <%= candidate.salary_expectation / 1000 %>&nbsp;K€ annuel
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-3">
+      <div class="line-clamp-2 min-h-12">
+        <% candidate.skills.first(3).each do |skill| %>
+          <%= render TagComponent.new(kind: "neutral") do %>
+            <%= skill.name %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% unless readonly? %>
+
+    <div class="bg-white rounded-b-2xl p-4.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-x-2 min-h-8">
+          <%== render User::AvatarComponent.new(user: candidate.agent, size: :sm) %>
+          <div class="paragraph-xs text-mute-900">
+            Qualifié par <%= candidate.agent.first_name %>
+          </div>
+        </div>
+
+        <div>
+          <% if helpers.current_user&.customer? && basket %>
+            <div class="relative z-10">
+              <% if meeting_requested? %>
+                <%= inline_svg_tag "icons/check.svg", class: "w-9 h-9 text-success-400" %>
+              <% elsif in_basket? %>
+                <%= button_to customer_basket_remove_candidate_path(basket_item_id: basket_item_for_candidate.id, candidate_id: candidate.id),
+                              method: :delete,
+                              data: { turbo: true },
+                              class: "cursor-pointer w-9 h-9 text-black flex items-center justify-center rounded-full bg-mute-300",
+                              title: "Retirer de la shortlist" do %>
+                  <%= inline_svg_tag "icons/x.svg", class: "w-6 h-6" %>
+                <% end %>
+              <% else %>
+                <%= button_to customer_basket_add_candidate_path(candidate_id: candidate.id),
+                              method: :post,
+                              data: { turbo: true },
+                              class: "cursor-pointer w-9 h-9 text-black flex items-center justify-center rounded-full bg-primary-500",
+                              title: "Ajouter à la shortlist" do %>
+                  <%= inline_svg_tag "icons/plus.svg", class: "w-6 h-6" %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+  <%= link_to '', customer_candidate_path(candidate), class: 'cursor-zoom-in inset-0 absolute', data: { turbo_frame: "_top" } %>
+</div>

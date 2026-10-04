@@ -1,0 +1,150 @@
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-logo">Afternoon</div>
+    <div class="pdf-meta">
+      Réf: <%= @project_candidate.anonymized_number %><br>
+      Généré le <%= Date.today.strftime("%d/%m/%Y") %>
+    </div>
+  </div>
+
+  <div class="pdf-body">
+    <div class="pdf-candidate-header">
+      <div class="pdf-avatar"><%= @project_candidate.initials %></div>
+      <div class="pdf-candidate-info">
+        <div class="pdf-title"><%= @candidate.position || "Candidat" %></div>
+        <div class="pdf-subtitle">
+          <%= @candidate.total_experience_in_years || "?" %> ans d'expérience
+          <% if @candidate.availability_notice.present? %>
+            · Disponible <%= t("simple_form.labels.candidate/motivations_form.availability_notices.#{@candidate.availability_notice}", default: @candidate.availability_notice) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if @project_candidate.summary.present? %>
+      <div class="pdf-summary">
+        <%= markdown_inline(@project_candidate.summary) %>
+      </div>
+    <% end %>
+
+    <div class="pdf-grid">
+      <div class="pdf-grid-col">
+        <div class="pdf-section">
+          <div class="pdf-section-title">Informations</div>
+          <div class="pdf-field">
+            <div class="pdf-field-label">Poste actuel</div>
+            <div class="pdf-field-value"><%= @candidate.position || "-" %></div>
+          </div>
+          <div class="pdf-field">
+            <div class="pdf-field-label">Expérience</div>
+            <div class="pdf-field-value"><%= @candidate.total_experience_in_years ? "#{@candidate.total_experience_in_years} ans" : "-" %></div>
+          </div>
+          <div class="pdf-field">
+            <div class="pdf-field-label">Localisation</div>
+            <div class="pdf-field-value"><%= @candidate.location&.city || "-" %></div>
+          </div>
+          <div class="pdf-field">
+            <div class="pdf-field-label">Prétentions salariales</div>
+            <div class="pdf-field-value"><%= @candidate.salary_expectation ? number_to_currency(@candidate.salary_expectation, unit: "€", format: "%n %u", precision: 0) + "/an" : "-" %></div>
+          </div>
+          <div class="pdf-field">
+            <div class="pdf-field-label">Type de contrat recherché</div>
+            <div class="pdf-field-value"><%= @candidate.contract_type ? t("simple_form.labels.candidate/motivations_form.contract_types.#{@candidate.contract_type}", default: @candidate.contract_type.upcase) : "-" %></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-grid-col">
+        <div class="pdf-section">
+          <div class="pdf-section-title">Compétences clés</div>
+          <div>
+            <% @candidate.skills.each do |skill| %>
+              <span class="pdf-skill-tag"><%= skill.name %></span>
+            <% end %>
+            <% if @candidate.skills.empty? %>
+              <span style="color: #9ca3af; font-size: 11px;">Aucune compétence renseignée</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @project_candidate.strengths.any? || @project_candidate.attention_points.any? %>
+      <div class="pdf-section">
+        <div class="pdf-section-title">Analyse du profil</div>
+        <% if @project_candidate.strengths.any? %>
+          <div class="pdf-highlight-box success">
+            <div class="pdf-highlight-title">Points forts</div>
+            <div class="pdf-highlight-text">
+              <% @project_candidate.strengths.each do |strength| %>
+                · <%= markdown_inline(strength) %><br>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <% if @project_candidate.attention_points.any? %>
+          <div class="pdf-highlight-box warning">
+            <div class="pdf-highlight-title">Points d'attention</div>
+            <div class="pdf-highlight-text">
+              <% @project_candidate.attention_points.each do |point| %>
+                · <%= markdown_inline(point) %><br>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @candidate.employments.any? %>
+      <div class="pdf-section">
+        <div class="pdf-section-title">Parcours professionnel</div>
+        <div class="pdf-timeline">
+          <% @candidate.employments.order(from_year: :desc, from_month: :desc).limit(5).each do |employment| %>
+            <div class="pdf-timeline-item">
+              <div class="pdf-timeline-period">
+                <%= employment.from_year %><%= employment.from_month ? "/#{employment.from_month.to_s.rjust(2, '0')}" : "" %> - <%= employment.to_year || "présent" %><%= employment.to_month && employment.to_year ? "/#{employment.to_month.to_s.rjust(2, '0')}" : "" %>
+                <% if employment.duration_in_months %>
+                  (<%= employment.duration_in_months / 12 %> an<%= employment.duration_in_months >= 24 ? "s" : "" %><%= employment.duration_in_months % 12 > 0 ? " #{employment.duration_in_months % 12} mois" : "" %>)
+                <% end %>
+              </div>
+              <div class="pdf-timeline-title"><%= employment.title %></div>
+              <div class="pdf-timeline-company">
+                <%= employment.company %>
+                <% if employment.location.present? %>
+                  - <%= employment.location %>
+                <% end %>
+              </div>
+              <% if employment.description.present? %>
+                <div class="pdf-timeline-desc"><%= truncate(employment.description, length: 150) %></div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @candidate.educations.any? %>
+      <div class="pdf-section">
+        <div class="pdf-section-title">Formation</div>
+        <% @candidate.educations.limit(3).each do |education| %>
+          <div class="pdf-field">
+            <div class="pdf-field-value">
+              <%= education.title %>
+              <% if education.issuing_organization.present? %>
+                - <%= education.issuing_organization %>
+              <% end %>
+              <% if education.from_year.present? %>
+                (<%= education.from_year %><%= education.to_year && education.to_year != education.from_year ? " - #{education.to_year}" : "" %>)
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="pdf-footer">
+    Document confidentiel généré par Afternoon · Les informations personnelles ont été anonymisées<br>
+    Pour organiser un entretien, contactez votre agent ou exprimez votre intérêt via la plateforme
+  </div>
+</div>

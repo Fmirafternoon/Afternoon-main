@@ -1,0 +1,41 @@
+<% if candidate.persisted? %>
+  <% if candidate.import_pending? %>
+    <div class="self-center relative w-5 h-5">
+      <%= inline_svg_tag "icons/spinner.svg" %>
+    </div>
+  <% elsif candidate.import_completed? %>
+    <div class="self-center shrink-0 relative w-5 h-5">
+      <%= inline_svg_tag "icons/success.svg", class: "text-success-500" %>
+    </div>
+  <% elsif candidate.import_failed? %>
+    <div class="self-center shrink-0 relative w-5 h-5">
+      <%= inline_svg_tag "icons/error.svg", class: "text-red-500" %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="self-center relative w-5 h-5">
+    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+      <circle
+        class="text-mute-300"
+        stroke-width="20"
+        stroke="currentColor"
+        fill="transparent"
+        r="45"
+        cx="60"
+        cy="60"
+      />
+      <circle
+        data-progress-bar
+        class="progress-circle text-success-500"
+        stroke-width="20"
+        stroke-linecap="square"
+        stroke="currentColor"
+        fill="transparent"
+        r="45"
+        cx="60"
+        cy="60"
+        style="stroke-dasharray:283; stroke-dashoffset:283;"
+      />
+    </svg>
+  </div>
+<% end %>

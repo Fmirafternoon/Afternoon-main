@@ -1,0 +1,12 @@
+<%= render HeaderComponent.new(title: "Ajouter un utilisateur") do |header| %>
+  <%= header.with_actions do %>
+    <div class="flex gap-x-2">
+      <%= link_to admin_users_path, class: "button-white" do %>
+        <%= inline_svg_tag('icons/chevron-left.svg', class: "w-4") %>
+        Retour à la liste
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render "form", user: @user, url: agent_users_path %>

@@ -1,0 +1,32 @@
+<%= render SplitScreenComponent.new(image: image_path("header.webp")) do %>
+  <div class="mb-12">
+    <%= render LogoComponent.new %>
+  </div>
+
+  <div class="mb-4">
+    <h2 class="title ">
+      Créer mon mot de passe
+    </h2>
+  </div>
+
+  <div class="mb-6">
+    <p class="text-gray-500 text-xs mb-2">Pour le compte</p>
+    <div class="leading-5 mt-2">
+      <p class="font-medium">
+        <%= @user.full_name %>
+      </p>
+      <p class="text-gray-600 text-sm">
+      <%= @user.email %>
+      </p>
+    </div>
+  </div>
+
+  <%= simple_form_for @user, url: users_password_creations_path(password_token: params[:password_token]), method: :post do |f| %>
+    <%= f.input :password, label: "Mon mot de passe", hint: "6 caractères minimum" %>
+
+    <%= f.button :submit, "Créer mon mot de passe", class: "button-primary button-lg w-full" %>
+  <% end %>
+<% end %>
+
+
+<% content_for(:title, 'Créer mon mot de passe') %>

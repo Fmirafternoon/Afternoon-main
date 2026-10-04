@@ -1,0 +1,21 @@
+---
+:concurrency: 5
+:queues:
+  - [default, 10]   # Priorité max - jobs rapides (UpdateCandidateJob)
+  - [mailers, 5]    # Haute priorité - emails
+  - [llm, 1]        # Basse priorité - jobs lents (AnalyseLlmJob)
+:batch_push_interval: 3
+
+# Sidekiq-scheduler configuration
+:scheduler:
+  :schedule:
+    weekly_digest:
+      cron: "0 12 * * 1" # Tous les lundis à 12h00
+      class: "WeeklyDigestJob"
+      queue: mailers
+      description: "Send weekly digest emails to customers"
+    agents_average_completion:
+      cron: "0 6 * * *" # Tous les jours à 6h00
+      class: "User::RefreshAgentsCompletionJob"
+      queue: default
+      description: "Calcule la complétion moyenne des profils publiés de chaque agent"

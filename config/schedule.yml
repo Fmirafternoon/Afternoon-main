@@ -1,0 +1,17 @@
+weekly_digest:
+  cron: "0 12 * * 1"
+  class: "WeeklyDigestJob"
+  queue: mailers
+  description: "Send weekly digest emails to customers"
+
+candidate_expiration_reminder:
+  cron: "0 9 * * *"
+  class: "CandidateExpirationReminderJob"
+  queue: mailers
+  description: "Send expiration reminder to agents for candidates published 12 days ago"
+
+candidate_auto_expiration:
+  cron: "0 10 * * *"
+  class: "CandidateAutoExpirationJob"
+  queue: default
+  description: "Auto-unpublish expired candidates"

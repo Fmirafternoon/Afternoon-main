@@ -1,0 +1,82 @@
+<!-- Header vert -->
+<div style="background-color: #d4edda; padding: 16px; border-radius: 8px; margin: 0 0 24px; text-align: center;">
+  <p style="margin: 0; color: #155724; font-size: 18px; font-weight: 600;">
+    Demande de rendez-vous envoyée
+  </p>
+</div>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Bonjour <%= @customer.first_name %>,
+</p>
+
+<p style="margin: 0 0 20px; color: #333; font-size: 14px; line-height: 1.5;">
+  Nous avons bien transmis votre demande de rendez-vous à
+  <strong><%= @agent.first_name %> <%= @agent.last_name %></strong>.
+</p>
+
+<!-- Prochaines étapes -->
+<div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 8px; color: #155724; font-weight: 600; font-size: 14px;">
+    Prochaines étapes
+  </p>
+  <p style="margin: 0; color: #155724; font-size: 14px;">
+    <%= @agent.first_name %> va recevoir votre demande et vous répondra directement par email
+    pour confirmer le rendez-vous ou vous proposer un autre créneau.
+  </p>
+</div>
+
+<!-- Récapitulatif -->
+<div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 12px; color: #092E46; font-weight: 600; font-size: 14px;">
+    Récapitulatif de votre demande
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Agent :</strong> <%= @agent.first_name %> <%= @agent.last_name %>
+    <% if @agent.recruitment_office.present? %>
+      <br><span style="color: #666; font-size: 13px;"><%= @agent.recruitment_office.name %></span>
+    <% end %>
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Date proposée :</strong> <%= l(@basket_item.meeting_date, format: :long_with_time) %>
+  </p>
+  <p style="margin: 12px 0 4px; color: #333; font-size: 14px;">
+    <strong>Candidats (<%= @candidates.count %>) :</strong>
+  </p>
+  <ul style="margin: 8px 0; padding-left: 20px;">
+    <% @candidates.each do |candidate| %>
+      <li style="margin: 4px 0; color: #333; font-size: 14px;">
+        <%= candidate.first_name %> <%= candidate.last_name %> - <%= candidate.position %>
+      </li>
+    <% end %>
+  </ul>
+  <% if @basket_item.customer_message.present? %>
+    <p style="margin: 12px 0 4px; color: #333; font-size: 14px;">
+      <strong>Votre message :</strong>
+    </p>
+    <p style="margin: 4px 0; font-style: italic; color: #666; font-size: 14px;">
+      <%= simple_format(@basket_item.customer_message) %>
+    </p>
+  <% end %>
+</div>
+
+<!-- Contact agent -->
+<div style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 8px; color: #1976d2; font-weight: 600; font-size: 14px;">
+    Pour échanger avec l'agent
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong><%= @agent.first_name %> <%= @agent.last_name %></strong><br>
+    <%= mail_to @agent.email, @agent.email, style: "color: #2196f3;" %>
+  </p>
+  <p style="margin: 8px 0 0; padding: 10px; background-color: white; border-radius: 4px; color: #333; font-size: 13px;">
+    <strong>Astuce :</strong> Vous pouvez répondre directement à cet email pour échanger avec <%= @agent.first_name %>.
+  </p>
+</div>
+
+<!-- Conseil -->
+<div style="background-color: #fff3e0; padding: 12px 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0; color: #e65100; font-size: 13px;">
+    <strong>Conseil :</strong> Surveillez votre boîte email (et vos spams !)
+    pour ne pas manquer la réponse de <%= @agent.first_name %>.
+  </p>
+</div>

@@ -1,0 +1,126 @@
+<%= simple_form_for @form, url: customer_onboarding_path(step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Bienvenue à bord !",
+    current_step: step,
+    wizard_steps: wizard_steps,
+    previous_path: previous_wizard_path,
+    cancel_path: current_user.customer_onboarded? ? customer_root_path : nil
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :customer_onboarding,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path
+  ) do |step_component| %>
+    <%
+      step_component.with_breadcrumb(
+        wizard: :customer_onboarding,
+        wizard_steps:,
+        current_step: step,
+        description: "Nous avons besoin de quelques informations pour vous permettre d'accéder à votre espace client.",
+      )
+    %>
+    <div class="col-span-2 md:grid md:grid-cols-2 gap-x-4">
+      <h3 class="col-span-2 title-5 mb-2">Informations sur votre entreprise</h3>
+
+
+      <div data-controller="autocomplete-company" class="relative col-span-2 flex items-start space-x-2">
+        <%=
+          f.input :company_name,
+            label: "Nom de l'entreprise",
+            wrapper_html: { class: "w-full grow" },
+            input_html: {
+              autocomplete: false,
+              data: {
+                autocomplete_company_target: "input",
+                action: "input->autocomplete-company#search click->autocomplete-company#reOpen blur->autocomplete-company#onBlur"
+              }
+            }
+        %>
+        <div data-autocomplete-company-target="results"></div>
+        <%= f.input :siren, input_html: { data: { autocomplete_company_target: "siren" } } %>
+      </div>
+      <div>
+        <h3 class="col-span-2 title-5 mb-2">Ajouter un secteur d'activité</h3>
+
+        <div class="col-span-2 flex items-start space-x-2">
+          <%= f.input :sector_id, label: "Secteur d'activité", collection: Sector.all, wrapper_html: { class: "w-full grow" } %>
+          <%= button_tag "Ajouter", type: "submit", name: "commit", value: "add_sector", class: "button-ghost button-xl" %>
+        </div>
+
+        <div class="col-span-2">
+          <h3 class="title-5 mb-2 text-mute-800">Secteurs d'activités actuels</h3>
+          <% if @company.sectors.any? %>
+            <div class="flex flex-wrap gap-2">
+              <% @company.company_sectors.each do |company_sector| %>
+                <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                  <span class="mr-1"><%= company_sector.sector.name %></span>
+                  <%= link_to "&times;".html_safe,
+                      customer_company_sector_path(company_sector),
+                      data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce secteur d'activité ?" },
+                      class: "text-red-500" %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-gray-500">Aucun secteur d'activité ajouté pour le moment.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <h3 class="col-span-2 mt-8 title-5 mt-4 mb-2">Villes dans lesquelles vous êtes présents</h3>
+      <div data-controller="autocomplete-address" class="relative col-span-2 flex items-start space-x-2">
+        <%=
+          f.input :autocomplete_address,
+            label: "Adresse",
+            placeholder: "Commencez à saisir votre adresse...",
+            wrapper_html: { class: "w-full grow" },
+            input_html: {
+              autocomplete: false,
+              data: {
+                autocomplete_address_target: "input",
+                action: "input->autocomplete-address#search click->autocomplete-address#reOpen blur->autocomplete-address#onBlur"
+              }
+            }
+        %>
+
+        <div data-autocomplete-address-target="results"></div>
+        <%= f.input :zip_code, as: :hidden, input_html: { data: { autocomplete_address_target: "zip" } } %>
+        <%= f.input :city, as: :hidden, input_html: { data: { autocomplete_address_target: "city" } } %>
+        <%= f.input :lat, as: :hidden, input_html: { data: { autocomplete_address_target: "lat" } } %>
+        <%= f.input :lng, as: :hidden, input_html: { data: { autocomplete_address_target: "lng" } } %>
+
+        <%=
+          button_tag(
+            "Ajouter",
+            name: "commit",
+            value: "add_location",
+            type: "submit",
+            class: "button-ghost  button-xl"
+          )
+        %>
+      </div>
+
+      <div class="col-span-2">
+
+        <% if current_user.company&.locations&.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% current_user.company.company_locations.each do |company_location| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1"><%= company_location.name %></span>
+                <%= link_to "&times;".html_safe,
+                    customer_company_location_path(company_location),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette compétence ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune ville ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

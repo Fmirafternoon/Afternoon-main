@@ -1,0 +1,21 @@
+<div class="<%= wrapper_classes %>  py-2 sm:col-span-1 ">
+    <dt class="flex items-center justify-between">
+      <div class="text-sm/6 font-medium text-gray-900 ">
+        <%= label %>
+      </div>
+    </dt>
+
+  <dd id="<%= id %>" class="<%= classes %> mt-1 text-sm/6 text-gray-700">
+    <% if value.present? || content.present? %>
+      <%= value %>
+      <%= content %>
+    <% else %>
+      <span class="text-gray-400">
+        &mdash;
+      </span>
+    <% end %>
+  </dd>
+  <div class="mt-4 flex justify-end">
+    <%= action %>
+  </div>
+</div>

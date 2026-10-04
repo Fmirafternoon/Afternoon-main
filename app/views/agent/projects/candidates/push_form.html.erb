@@ -1,0 +1,55 @@
+<%= turbo_frame_tag :modal do %>
+  <div class="bg-white rounded-xl w-[90vw] max-w-4xl max-h-[90vh] overflow-y-auto">
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-6">
+        <div class="flex gap-4">
+          <div class="w-12 h-12 rounded-full bg-mute-300 flex items-center justify-center text-mute-800 font-bold">
+            <%= @project_candidate.candidate.initials %>
+          </div>
+          <div>
+            <h2 class="title-4">Présenter au client</h2>
+            <p class="paragraph-xs text-mute-700">
+              <%= @project_candidate.candidate.full_name %> pour <strong><%= @project.client_name %></strong>
+            </p>
+          </div>
+        </div>
+        <button type="button" data-action="turbo-modal#close" class="text-mute-500 hover:text-mute-700">
+          <%= inline_svg_tag "icons/x.svg", class: "w-5 h-5" rescue "✕" %>
+        </button>
+      </div>
+
+      <%= form_with url: push_agent_project_candidate_path(@project, @project_candidate), method: :post, data: { turbo_frame: "_top" } do |f| %>
+
+        <div class="mb-4">
+          <label class="label-sm mb-2 block">Résumé</label>
+          <div data-controller="trix-markdown">
+            <input type="hidden" id="push_summary" name="push[summary]" data-trix-markdown-target="input" value="<%= md_to_html(@project_candidate.llm_summary) %>">
+            <trix-editor input="push_summary" class="w-full trix-content prose prose-sm min-h-24"></trix-editor>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="label-sm mb-2 block">Points forts</label>
+          <div data-controller="trix-markdown">
+            <input type="hidden" id="push_strengths" name="push[strengths]" data-trix-markdown-target="input" value="<%= md_array_to_html_list(@project_candidate.llm_strengths) %>">
+            <trix-editor input="push_strengths" class="w-full trix-content prose prose-sm min-h-24"></trix-editor>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="label-sm mb-2 block">Points d'attention</label>
+          <div data-controller="trix-markdown">
+            <input type="hidden" id="push_attention_points" name="push[attention_points]" data-trix-markdown-target="input" value="<%= md_array_to_html_list(@project_candidate.llm_attention_points) %>">
+            <trix-editor input="push_attention_points" class="w-full trix-content prose prose-sm min-h-24"></trix-editor>
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-4 border-t">
+          <%= f.submit "Présenter au client", class: "button-primary" %>
+          <button type="button" data-action="turbo-modal#close" class="button-secondary">Annuler</button>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+<% end %>

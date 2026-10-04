@@ -1,0 +1,98 @@
+<%= simple_form_for @form, url: agent_candidate_wizard_path(@candidate, step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Construire le profil du candidat",
+    cancel_path: agent_candidate_path(@candidate),
+    current_step: step,
+    previous_path: previous_wizard_path,
+    wizard_steps: wizard_steps,
+    show_finish: true
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :candidate,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    previous_path: previous_wizard_path,
+    show_finish: true
+  ) do |step_component| %>
+    <% step_component.with_breadcrumb(
+      wizard: :candidate,
+      wizard_steps: wizard_steps,
+      current_step: step,
+      description: "Vérifiez et complétez les informations du candidat. Seul les profils 100% complétés seront proposés.",
+      step_path: ->(step) { step_path(step) },
+      step_accessible: ->(step) { step_accessible?(step) }
+    ) %>
+
+      <!-- Start content -->
+      <%= f.input :availability_notice, as: :select, collection: @form.availability_notices_list %>
+      <div></div>
+
+      <%= f.input :contract_type, as: :select, collection: @form.contract_types_list %>
+      <%= f.input :salary_expectation %>
+
+      <%= f.input :has_driving_license, as: :switch %>
+      <%= f.input :has_a_car, as: :switch %>
+
+      <h3 class="col-span-2 title-5 mt-4 mb-2">Mobilités géographiques</h3>
+      <% if @form.errors.has_key?(:base) %>
+        <div class="col-span-2 bg-red-100 text-red-700 rounded-lg p-2 mb-2">
+          <%= @form.errors.messages_for(:base).join(', ') %>
+        </div>
+      <% end %>
+      <div data-controller="autocomplete-address" class="relative col-span-2 flex items-start space-x-2">
+        <%=
+          f.input :autocomplete_address,
+            label: "Adresse",
+            placeholder: "Commencez à saisir votre adresse...",
+            wrapper_html: { class: "w-full grow" },
+            input_html: {
+              autocomplete: false,
+              data: {
+                autocomplete_address_target: "input",
+                action: "input->autocomplete-address#search click->autocomplete-address#reOpen blur->autocomplete-address#onBlur"
+              }
+            }
+        %>
+
+        <div data-autocomplete-address-target="results"></div>
+        <%= f.input :zip_code, as: :hidden, input_html: { data: { autocomplete_address_target: "zip" } } %>
+        <%= f.input :city, as: :hidden, input_html: { data: { autocomplete_address_target: "city" } } %>
+        <%= f.input :lat, as: :hidden, input_html: { data: { autocomplete_address_target: "lat" } } %>
+        <%= f.input :lng, as: :hidden, input_html: { data: { autocomplete_address_target: "lng" } } %>
+
+        <%=
+          button_tag(
+            "Ajouter",
+            name: "commit",
+            value: "add_mobility",
+            type: "submit",
+            class: "button-ghost  button-xl"
+          )
+        %>
+      </div>
+
+      <div class="col-span-2">
+
+        <% if @candidate.candidate_mobilities.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @candidate.candidate_mobilities.each do |candidate_mobility| %>
+              <div class="inline-flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span class="mr-1"><%= candidate_mobility.name %></span>
+                <%= link_to "&times;".html_safe,
+                    agent_candidate_mobility_path(candidate_mobility),
+                    data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette compétence ?" },
+                    class: "text-red-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">Aucune ville ajoutée pour le moment.</p>
+        <% end %>
+      </div>
+      <!-- End content -->
+
+
+  <% end %>
+<% end %>

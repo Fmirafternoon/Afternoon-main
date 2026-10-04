@@ -1,0 +1,90 @@
+<%= turbo_frame_tag dom_id(pc, :agent) do %>
+  <div class="card-secondary mb-4">
+    <div class="flex gap-4">
+      <div class="w-12 h-12 rounded-full bg-mute-300 flex items-center justify-center text-mute-800 font-bold">
+        <%= pc.candidate.initials %>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="label-sm"><%= pc.candidate.full_name %></span>
+          <% case pc.status %>
+          <% when "matched" %>
+            <%= render TagComponent.new(kind: :black) do %>À valider<% end %>
+            <% unless pc.analysis_ready? %>
+              <span class="inline-flex items-center gap-1 text-xs text-mute-500">
+                <%= inline_svg_tag "icons/loader.svg", class: "w-3 h-3 animate-spin" rescue nil %>
+                Analyse en cours...
+              </span>
+            <% end %>
+          <% when "pushed" %>
+            <%= render TagComponent.new(kind: :primary) do %>Présenté<% end %>
+          <% when "interested" %>
+            <%= render TagComponent.new(kind: :success) do %>Intérêt<% end %>
+          <% when "rejected" %>
+            <%= render TagComponent.new() do %>Rejeté<% end %>
+          <% end %>
+        </div>
+        <div class="paragraph-xs text-mute-700 mb-2">
+          <%= pc.candidate.position || "Poste non renseigné" %>
+          <% if pc.candidate.total_experience_in_years %>
+            - <%= pc.candidate.total_experience_in_years %> ans d'exp.
+          <% end %>
+        </div>
+
+        <% if pc.summary.present? %>
+          <div class="bg-mute-100 p-2 rounded-lg paragraph-xs mb-2">
+            <%= sanitize md_to_html(pc.summary) %>
+          </div>
+        <% end %>
+
+        <% if pc.interested? && pc.interest_message.present? %>
+          <div class="bg-success-50 border border-success-200 p-2 rounded-lg paragraph-xs mb-2">
+            <strong class="text-success-700">Message du client:</strong>
+            "<%= pc.interest_message %>"
+          </div>
+        <% end %>
+
+        <% if pc.interested? %>
+          <% customer = pc.project.customer %>
+          <div class="bg-yellow-100 border border-yellow-300 p-2 rounded-lg paragraph-xs mb-2">
+            <strong class="text-yellow-800">Contact client:</strong>
+            <%= customer.full_name %> -
+            <%= mail_to customer.email, customer.email, class: "text-yellow-800 underline" %>
+            <% if customer.phone_number.present? %>
+              - <%= customer.phone_number %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if pc.rejected? && pc.interest_message.present? %>
+          <div class="bg-red-50 p-2 rounded-lg paragraph-xs mb-2">
+            <strong class="text-red-700">Motif rejet:</strong>
+            <%= pc.interest_message %>
+          </div>
+        <% end %>
+
+        <div class="flex gap-2 mt-3 justify-between">
+          <div class="flex gap-2">
+            <% if pc.matched? && pc.analysis_ready? %>
+              <% if pc.questions_required? %>
+                <%= link_to "Répondre aux questions", questions_agent_project_candidate_path(project, pc), class: "button-primary hide-link-icon", data: { turbo_frame: "_top" } %>
+              <% else %>
+                <%= link_to "Présenter au client", push_agent_project_candidate_path(project, pc), class: "button-primary hide-link-icon", data: { turbo_frame: "modal" } %>
+              <% end %>
+              <%= button_to "Rejeter", cancel_agent_project_candidate_path(project, pc), method: :post, class: "button-secondary", data: { turbo_confirm: "Confirmer le rejet de ce candidat ?" } %>
+            <% end %>
+            <% if pc.pushed? %>
+              <%#= button_to "Retirer", cancel_agent_project_candidate_path(project, pc), method: :post, class: "button-secondary", data: { confirm: "Confirmer l'annulation ?" } %>
+            <% end %>
+          </div>
+          <div class="flex gap-2">
+            <% if pc.pushed? || pc.interested? || pc.rejected? %>
+              <%= link_to "Voir l'analyse", agent_project_candidate_path(project, pc), class: "button-secondary hide-link-icon", data: { turbo_frame: "_top" } %>
+            <% end %>
+            <%= link_to "Voir le profil", agent_candidate_path(pc.candidate), class: "button-secondary hide-link-icon", target: "_blank" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

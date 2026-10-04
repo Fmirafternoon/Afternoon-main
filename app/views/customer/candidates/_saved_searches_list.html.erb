@@ -1,0 +1,10 @@
+<ul id="saved-searches-list" role="list" class="-space-y-px bg-white rounded-lg">
+  <% if saved_searches.any? %>
+    <% saved_searches.each do |saved_search| %>
+      <%= render SavedSearchItemComponent.new(
+        saved_search: saved_search,
+        active: defined?(active_saved_search_id) && active_saved_search_id.to_s == saved_search.id.to_s
+      ) %>
+    <% end %>
+  <% end %>
+</ul>

@@ -1,0 +1,13 @@
+<div class="card-container justify-center items-start bg-gray-50 flex-grow flex min-w-full align-middle overflow-y-scroll">
+  <div class="w-full card max-w-md p-8 mt-16">
+    <div class="text-center">
+      <%= inline_svg_tag 'warning-exclamation.svg', class: "mx-auto h-12 w-12 text-gray-400" %>
+      <% if search %>
+        <div class="flex items-center justify-center gap-2">
+          <h3 class="text-sm font-normal text-gray-500">Aucun résultat pour </h3>
+          <h3 class="text-gray-800 font-semibold italic"><%= query %></h3>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<% if rows.any? %>
+  <div class="table-wrapper ">
+    <table class="table-list">
+      <thead>
+        <%= header %>
+      </thead>
+      <tbody class="bg-white" <%= ":loop='#{loop_on}'".html_safe  %>>
+        <% if loop_on.present? %>
+          {{#each <%= loop_on %>}}
+        <% end %>
+
+        <% rows.each do |row| %>
+          <%= row %>
+        <% end %>
+
+        <% if loop_on.present? %>
+          {{/each}}
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <% if params[:search] %>
+    <%= empty_search %>
+  <% else %>
+    <%= empty_state %>
+  <% end %>
+<% end %>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-20T10:00:00.000Z" agent="Claude" version="22.1.0">
+  <diagram name="Project Flow" id="project-flow">
+    <mxGraphModel dx="1434" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- CLIENT SWIMLANE -->
+        <mxCell id="client-lane" value="🏢 CLIENT" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e1f5fe;strokeColor=#0288d1;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="200" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c1" value="Crée projet&#xa;de recrutement" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;" vertex="1" parent="client-lane">
+          <mxGeometry x="40" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c2" value="Remplit Job Offer&#xa;&#xa;• Nom du poste&#xa;• Localisation&#xa;• Date début&#xa;• Description" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;align=left;spacingLeft=10;" vertex="1" parent="client-lane">
+          <mxGeometry x="200" y="40" width="140" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c3" value="Définit critères&#xa;recherche&#xa;&#xa;• Secteurs&#xa;• Compétences&#xa;• Localisation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;align=left;spacingLeft=10;" vertex="1" parent="client-lane">
+          <mxGeometry x="380" y="40" width="140" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c4" value="Active&#xa;alertes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;" vertex="1" parent="client-lane">
+          <mxGeometry x="560" y="70" width="80" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c5" value="Consulte profils&#xa;proposés&#xa;(anonymisés)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;" vertex="1" parent="client-lane">
+          <mxGeometry x="820" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c6" value="Exprime&#xa;intérêt" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4fc3f7;strokeColor=#0288d1;fontStyle=1;" vertex="1" parent="client-lane">
+          <mxGeometry x="980" y="70" width="80" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows in client lane -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="client-lane" source="c1" target="c2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="client-lane" source="c2" target="c3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="client-lane" source="c3" target="c4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="client-lane" source="c5" target="c6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SYSTEME SWIMLANE -->
+        <mxCell id="systeme-lane" value="⚙️ SYSTÈME" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff9800;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="260" width="1080" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s1" value="Project créé&#xa;+ SavedSearch" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe0b2;strokeColor=#f57c00;" vertex="1" parent="systeme-lane">
+          <mxGeometry x="560" y="50" width="80" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s2" value="Matching&#xa;automatique&#xa;candidats" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#f57c00;" vertex="1" parent="systeme-lane">
+          <mxGeometry x="200" y="55" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3" value="🤖 Analyse LLM&#xa;projet × candidat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc80;strokeColor=#ef6c00;fontStyle=1;" vertex="1" parent="systeme-lane">
+          <mxGeometry x="340" y="55" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s4" value="📧 Email&#xa;notification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#f57c00;" vertex="1" parent="systeme-lane">
+          <mxGeometry x="820" y="55" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows in systeme lane -->
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="systeme-lane" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="85" />
+              <mxPoint x="500" y="85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="systeme-lane" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RECRUTEUR SWIMLANE -->
+        <mxCell id="recruteur-lane" value="👔 RECRUTEUR" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#43a047;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="1080" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r1" value="Voit candidats&#xa;matchés" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;" vertex="1" parent="recruteur-lane">
+          <mxGeometry x="340" y="55" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r2" value="Vérifie&#xa;analyse LLM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;" vertex="1" parent="recruteur-lane">
+          <mxGeometry x="480" y="55" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r3" value="🚀 Valide&#xa;&amp; Pousse" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#2e7d32;fontStyle=1;" vertex="1" parent="recruteur-lane">
+          <mxGeometry x="620" y="55" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r4" value="Reçoit notif&#xa;intérêt client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;" vertex="1" parent="recruteur-lane">
+          <mxGeometry x="980" y="55" width="80" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows in recruteur lane -->
+        <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="recruteur-lane" source="r1" target="r2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="recruteur-lane" source="r2" target="r3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- CROSS-LANE ARROWS -->
+        <mxCell id="cross1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="c4" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="200" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="cross2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="s3" target="r1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cross3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="r3" target="s4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="750" y="535" />
+              <mxPoint x="750" y="400" />
+              <mxPoint x="870" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="cross4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="s4" target="c5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cross5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="c6" target="r4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="170" />
+              <mxPoint x="1100" y="170" />
+              <mxPoint x="1100" y="535" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

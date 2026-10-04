@@ -1,0 +1,52 @@
+<%= turbo_frame_tag dom_id(candidate, :agent), class: 'h-full' do %>
+  <div class="flex flex-col h-full relative border border-mute-300 rounded-3xl <%= candidate.draft? ? "bg-primary-100" : "bg-mute-200" %> p-4.5">
+    <div class="flex justify-between">
+      <div class="flex items-center gap-x-2">
+        <%= render Candidate::ContractComponent.new(candidate: candidate) %>
+        <%= render Candidate::AvailabilityComponent.new(candidate: candidate) %>
+      </div>
+      <div class="label-sm">
+        <%= render Candidate::PublicationStatusComponent.new(candidate) %>
+        <% if candidate.archived? %>
+          <%= render TagComponent.new(kind: :danger) do %>
+            Archivé
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="label-lg mt-3 line-clamp-2 min-h-14">
+      <%= candidate.position %>
+    </div>
+    <%= render Candidate::CompletionBarComponent.new(candidate: candidate) %>
+    <div class="paragraph-md mb-2 text-black/75">
+      <%= candidate.full_name %>
+    </div>
+
+    <div class="grow items-end flex space-x-4.5 paragraph-xs text-black">
+      <% if candidate.location.present? %>
+        <div class="flex items-center space-x-1">
+          <%= inline_svg_tag "icons/pin.svg", class:"w-4.5" %>
+          <%= candidate.location.city %>
+          <%= candidate.location.zip_code %>
+        </div>
+      <% end %>
+      <% if candidate.total_experience_in_years.present? %>
+        <div>
+          <span class="font-extrabold text-mute-700">
+            XP
+          </span>
+          <%= candidate.total_experience_in_years %>&nbsp;ans
+        </div>
+      <% end %>
+
+      <% if candidate.salary_expectation.present? %>
+        <div>
+          <%= candidate.salary_expectation / 1000 %>&nbsp;K€ annuel
+        </div>
+      <% end %>
+    </div>
+
+    <%= link_to '', agent_candidate_path(candidate), class: 'inset-0 absolute', data: { turbo_frame: "_top" } %>
+  </div>
+<% end %>

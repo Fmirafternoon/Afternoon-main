@@ -1,0 +1,9 @@
+<%= link_to document.url, class: "button-ghost w-full items-start justify-start", target: "_blank" do %>
+  <%= inline_svg_tag "icons/document.svg", class: "w-4" %>
+  <div>
+    <%= document.file_name %>
+    <p class="text-gray-500 text-xs">
+      Ajouté le <%= document.created_at.strftime("%d/%m/%Y") %>
+    </p>
+  </div>
+<% end %>

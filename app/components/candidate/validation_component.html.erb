@@ -1,0 +1,27 @@
+<% if render? %>
+
+  <div class="space-y-4">
+    <div class="card bg-blue-50 p-4 space-y-4">
+
+      <% validation_errors.each do |step, messages| %>
+        <div class="flex justify-between items-start">
+          <div class="">
+            <h3 class="title-5 text-blue-800">
+              <%= step_name(step) %>
+            </h3>
+            <div class="text-sm text-blue-700">
+              <% messages.each do |message| %>
+                <div><%= message %></div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="mt-2">
+            <%= link_to "Compléter", step_path(step),
+              class: "button-ghost button-xs text-blue-800" %>
+          </div>
+        </div>
+      <% end %>
+  </div>
+
+<% end %>

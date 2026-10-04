@@ -1,0 +1,16 @@
+<%= turbo_frame_tag dom_id(candidate, :agent) do %>
+  <div data-observer-display-target="item" data-observer-count-target="item" class="relative border border-mute-300 rounded-2xl p-3">
+    <div class="flex justify-between space-x-2">
+      <div>
+        <div class="line-clamp-1 label-sm" data-file-name>
+          <%= candidate.resume_file_name %>
+        </div>
+        <%= render Candidate::ImportStatusComponent.new(candidate) %>
+      </div>
+      <%= render Candidate::ProgressComponent.new(candidate) %>
+    </div>
+    <% if candidate.import_failed? %>
+      <%= link_to "Supprimer", agent_candidate_path(candidate), data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, class: "link-dropdown text-danger" %>
+    <% end %>
+  </div>
+<% end %>

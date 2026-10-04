@@ -1,0 +1,66 @@
+<%= turbo_stream_from "candidates_#{current_user.id}" %>
+
+<div class="flex flex-col lg:flex-row lg:space-x-8">
+  <div data-controller="resume-bulk-upload" class="block lg:w-xs lg:w-full shrink-0 flex flex-col space-y-4">
+    <div data-resume-bulk-upload-target="dropzone" class="w-full flex flex-col items-center space-y-2 rounded-3xl border-mute-500 border-dashed border px-4 py-12 text-center cursor-pointer">
+      <div>
+        <%= inline_svg_tag "icons/upload.svg", class: "w-12" %>
+      </div>
+      <div class="pb-3">
+        <div class="label-lg">
+          Glissez déposez vos CV
+        </div>
+        <div class="paragraph-xs">
+          Formats acceptés : .pdf
+        </div>
+      </div>
+      <div class="button">Choisir un fichier</div>
+    </div>
+
+    <div data-controller="observer-count observer-display">
+      <div data-observer-display-target="display" class="mb-1 flex justify-between items-center">
+        <div class="paragraph-sm">
+          <span data-observer-count-target="count">
+            X
+          </span>
+          CV déposé(s)
+        </div>
+        <%= link_to "Effacer", cancel_agent_candidates_path, class: "label-sm text-mute-800 link", data: { turbo_method: :post } %>
+      </div>
+
+      <div class="flex flex-col space-y-1.5" id="uploads" data-resume-bulk-upload-target="uploads">
+        <% @candidates.where(import_status: [:pending, :failed]).each do |candidate| %>
+          <%= render partial: "agent/candidates/upload", locals: { candidate: candidate } %>
+        <% end %>
+      </div>
+    </div>
+
+    <template data-upload-item-template>
+      <%= render partial: "agent/candidates/upload", locals: { candidate: Candidate.new(import_status: :uploading) } %>
+    </template>
+  </div>
+
+  <div class="w-full">
+    <div class="flex justify-between items-center">
+      <div class="title-3 ml-4.5 mb-4">
+        <div id="candidates_count">
+          <%= render "count", count: @candidates.count %>
+        </div>
+      </div>
+
+
+      <div class="button-group">
+        <%= active_link_to "Tous", agent_candidates_path, class: "", active: { status: nil } %>
+        <%= active_link_to "Publiés", agent_candidates_path(status: "published"), class: "", active: { status: "published" } %>
+        <%= active_link_to "Brouillons", agent_candidates_path(status: "draft"), class: "", active: { status: "draft" } %>
+        <%= active_link_to "Archivés", agent_candidates_path(status: "archived"), class: "", active: { status: "archived" } %>
+      </div>
+    </div>
+
+    <div id="candidates" class="justify-stretch grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+      <% @candidates.each do |candidate| %>
+        <%= render partial: "agent/candidates/candidate", locals: { candidate: candidate } %>
+      <% end %>
+    </div>
+  </div>
+</div>

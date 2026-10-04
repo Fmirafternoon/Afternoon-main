@@ -1,0 +1,85 @@
+<%= simple_form_for @form, url: agent_candidate_wizard_path(@candidate, step), as: :wizard_form, method: :put do |f| %>
+
+  <%= render Form::NavbarComponent.new(
+    title: "Construire le profil du candidat",
+    cancel_path: @candidate.persisted? ? agent_candidate_path(@candidate) : :back,
+    current_step: step,
+    wizard_steps: wizard_steps,
+    show_finish: @candidate.persisted?
+  ) %>
+
+  <%= render Form::StepComponent.new(
+    wizard: :candidate,
+    wizard_steps: wizard_steps,
+    current_step: step,
+    show_finish: @candidate.persisted?
+  ) do |step_component| %>
+    <% step_component.with_breadcrumb(
+      wizard: :candidate,
+      wizard_steps: wizard_steps,
+      current_step: step,
+      description: "Vérifiez et complétez les informations du candidat. Seul les profils 100% complétés seront proposés.",
+      step_path: ->(step) { step_path(step) },
+      step_accessible: ->(step) { step_accessible?(step) }
+    ) %>
+
+    <div class="col-span-2 notice text-sm italic mb-6">
+      Les informations saisies à cette étape ne seront jamais rendues publiques. Elles sont uniquement utilisées pour permettre à l'agent de retrouver et identifier facilement ses candidats.
+    </div>
+
+    <div>
+      <%= f.input :first_name %>
+    </div>
+    <div>
+      <%= f.input :last_name, placeholder: "Nom" %>
+    </div>
+
+    <div>
+      <%= f.input :gender, collection: Candidate.genders.keys.map { |key| [Candidate.human_enum_name(:gender, key), key] }, include_blank: "Genre" %>
+    </div>
+    <div></div>
+
+    <div>
+      <%= f.input :birth_year, placeholder: "Année de naissance",
+          input_html: { type: "number", min: 1940, max: Date.today.year - 15 } %>
+    </div>
+    <div></div>
+
+    <div data-controller="autocomplete-address" class="mb-4 relative col-span-2 flex flex-col">
+      <%=
+        f.input :autocomplete_address,
+          required: true,
+          label: "Adresse",
+          placeholder: "Commencez à saisir votre adresse...",
+          wrapper_html: { class: "w-full grow !mb-1" },
+          input_html: {
+            autocomplete: false,
+            data: {
+              autocomplete_address_target: "input",
+              action: "input->autocomplete-address#search click->autocomplete-address#reOpen blur->autocomplete-address#onBlur"
+            }
+          }
+      %>
+      <div class="paragraph-xs text-mute-800">
+        Veuillez renseigner la ville au minimum en la sélectionnant dans la liste de suggestions
+      </div>
+
+    <div data-autocomplete-address-target="results"></div>
+      <%= f.input :address, as: :hidden, input_html: { data: { autocomplete_address_target: "address" } } %>
+      <%= f.input :zip_code, as: :hidden, input_html: { data: { autocomplete_address_target: "zip" } } %>
+      <%= f.input :city, as: :hidden, input_html: { data: { autocomplete_address_target: "city" } } %>
+      <%= f.input :lat, as: :hidden, input_html: { data: { autocomplete_address_target: "lat" } } %>
+      <%= f.input :lng, as: :hidden, input_html: { data: { autocomplete_address_target: "lng" } } %>
+    </div>
+
+    <div class="md:col-span-2">
+      <%= f.input :email, placeholder: "Email" %>
+    </div>
+
+    <div class="mt-4">
+      <%= f.input :phone_number, placeholder: "Téléphone" %>
+    </div>
+    <div></div>
+
+  <% end %>
+<% end %>

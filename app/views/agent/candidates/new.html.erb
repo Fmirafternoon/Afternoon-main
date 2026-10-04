@@ -1,0 +1,15 @@
+  <%= simple_form_for @candidate, url: agent_candidates_path do |f| %>
+    <%= f.input :first_name %>
+    <%=
+      f.input :resume,
+        as: :file,
+        direct_upload: true,
+        input_html: {
+          data: {
+            direct_upload_url: rails_direct_uploads_url
+          }
+        }
+    %>
+
+    <%= f.submit "Submit", class: "button-primary" %>
+  <% end %>

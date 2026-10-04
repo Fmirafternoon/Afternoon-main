@@ -1,0 +1,23 @@
+<div class="bg-white px-4 sm:px-6 lg:px-20 relative">
+  <div class="relative z-10 max-w-7xl mx-auto">
+    <section class="relative">
+      <div class="absolute inset-0">
+        <%= image_tag "recruteurs.webp",
+            class: "w-full h-full object-cover rounded-t-3xl",
+            alt: "Recruteur" %>
+      </div>
+
+      <div class="relative py-40 md:py-52 flex flex-col items-center justify-center text-center">
+        <h2 class="title-1 text-white text-shadow-lg">
+          Vous êtes Recruteur ?
+        </h2>
+        <p class="title-4 text-white mt-4 max-w-2xl mx-auto">
+          Devenez partenaire et partagez votre vivier de candidats
+        </p>
+        <div class="mt-8">
+          <%= link_to "Devenir partenaire", ENV.fetch("CALENDLY_URL"), target: "_blank", class: "hide-link-icon button-primary button-md" %>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

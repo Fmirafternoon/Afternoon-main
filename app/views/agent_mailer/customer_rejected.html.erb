@@ -1,0 +1,48 @@
+<!-- Header rouge -->
+<div style="background-color: #f8d7da; padding: 16px; border-radius: 8px; margin: 0 0 24px; text-align: center;">
+  <p style="margin: 0; color: #721c24; font-size: 18px; font-weight: 600;">
+    Candidat rejeté
+  </p>
+</div>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Le client <strong><%= @customer.full_name %></strong> a rejeté le candidat
+  <strong><%= @candidate.full_name %></strong> pour le projet "<%= @project.title %>".
+</p>
+
+<% if @project_candidate.interest_message.present? %>
+  <div style="background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 12px 16px; margin: 16px 0;">
+    <p style="margin: 0 0 4px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+      Raison du rejet
+    </p>
+    <p style="margin: 0; color: #333; font-size: 14px;">
+      "<%= @project_candidate.interest_message %>"
+    </p>
+  </div>
+<% end %>
+
+<!-- Candidat -->
+<div style="background-color: #e8e8e8; padding: 16px; border-radius: 8px; margin: 16px 0;">
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px; font-weight: 600;">
+    Candidat : <%= @candidate.full_name %>
+  </p>
+  <p style="margin: 0; color: #666; font-size: 13px;">
+    <%= @candidate.position %> - <%= @candidate.total_experience_in_years %> ans d'expérience
+  </p>
+</div>
+
+<p style="margin: 16px 0 0; color: #666; font-size: 13px; line-height: 1.5;">
+  Vous pouvez utiliser ce retour pour affiner vos prochaines propositions
+  ou proposer d'autres profils au client.
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
+  <tr>
+    <td align="center">
+      <a href="<%= agent_project_url(@project) %>"
+         style="display: inline-block; background-color: #6c757d; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+        Voir le projet
+      </a>
+    </td>
+  </tr>
+</table>

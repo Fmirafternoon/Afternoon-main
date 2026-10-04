@@ -1,0 +1,33 @@
+<div class="flex items-center gap-x-3" data-controller="tooltip" data-tooltip-content-value="<%= tooltip_content %>">
+  <div class="relative w-16 h-16 shrink-0">
+    <svg class="w-full h-full -rotate-90" viewBox="0 0 120 120">
+      <circle
+        class="text-mute-300"
+        stroke-width="12"
+        stroke="currentColor"
+        fill="transparent"
+        r="45"
+        cx="60"
+        cy="60"
+      />
+      <circle
+        class="progress-circle <%= color_class %>"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke="currentColor"
+        fill="transparent"
+        r="45"
+        cx="60"
+        cy="60"
+        stroke-dasharray="<%= CIRCUMFERENCE %>"
+        stroke-dashoffset="<%= stroke_dashoffset %>"
+      />
+    </svg>
+    <div class="absolute inset-0 flex items-center justify-center label-sm">
+      <%= percentage %>%
+    </div>
+  </div>
+  <p class="paragraph-xs text-mute-900">
+    Complétion<br>du profil
+  </p>
+</div>

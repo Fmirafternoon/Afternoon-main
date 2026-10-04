@@ -1,0 +1,66 @@
+<%= turbo_frame_tag :modal do %>
+  <div class="bg-white max-w-full w-[600px] p-8 rounded-lg">
+    <h1 class="modal-title mb-6">Sauvegarder cette recherche</h1>
+
+    <%= simple_form_for @saved_search,
+        url: customer_saved_searches_path,
+        html: { data: { turbo_frame: "_top" } } do |f| %>
+
+      <div class="criteria-summary my-4 p-4 bg-gray-50 rounded-lg">
+        <h4 class="font-semibold mb-2 text-sm">Critères sauvegardés :</h4>
+        <ul class="space-y-1 text-sm text-gray-700">
+          <% if @search_form.query.present? %>
+            <li class="flex items-start">
+              <span class="mr-2">•</span>
+              <span>Recherche : <%= @search_form.query %></span>
+            </li>
+          <% end %>
+          <% if @search_form.city.present? %>
+            <li class="flex items-start">
+              <span class="mr-2">•</span>
+              <span>Ville : <%= @search_form.city %></span>
+            </li>
+          <% end %>
+          <% if @search_form.sector_ids.any? %>
+            <li class="flex items-start">
+              <span class="mr-2">•</span>
+              <span>Secteurs : <%= Sector.where(id: @search_form.sector_ids).pluck(:name).join(", ") %></span>
+            </li>
+          <% end %>
+          <% if @search_form.skills.any? %>
+            <li class="flex items-start">
+              <span class="mr-2">•</span>
+              <span>Compétences : <%= @search_form.skills.join(", ") %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <%= f.input :name,
+                  label: "Nom de la recherche",
+                  placeholder: "Ex: Géomètres Bordeaux",
+                  input_html: { class: "mt-1", autofocus: true } %>
+      
+      <div class="mt-4">
+        <%= f.input :email_alerts_enabled,
+                    as: :boolean,
+                    label: false,
+                    inline_label: "Recevoir des alertes email hebdomadaires",
+                    input_html: { class: "rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" },
+                    wrapper_html: { class: "flex items-center" } %>
+        <p class="text-sm text-gray-500 mt-1 ml-6">
+          Vous recevrez chaque lundi les nouveaux candidats correspondant à cette recherche à l'adresse <%= current_user.email %>
+        </p>
+      </div>
+
+      <%= f.hidden_field :criteria, value: @search_form.attributes.to_json %>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <%= f.submit 'Sauvegarder', class: 'button-primary' %>
+        <%= link_to 'Annuler', '#',
+            data: { action: 'turbo-modal#close' },
+            class: 'button-secondary' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,32 @@
+<div class="my-12 md:my-18 container mx-auto max-w-5xl px-4 flex flex-col gap-y-6 md:gap-y-10 md:flex-row md:gap-x-10">
+  <div class="shrink-0 md:max-w-1/3">
+    <%= breadcrumb %>
+  </div>
+
+  <div class="grow">
+    <div class="md:grid md:grid-cols-2 gap-x-4">
+      <h2 class="col-span-2 title-3 mb-6">
+        <%= I18n.t("wizard.#{wizard}.#{current_step}") %>
+      </h2>
+      <%= content %>
+    </div>
+
+    <div class="mt-8 flex justify-end gap-x-4 md:hidden">
+      <% if previous_path.present? %>
+        <%= link_to previous_path, class: "w-1/3 shrink-0 button-secondary button-md" do %>
+          Précédent
+        <% end %>
+      <% end %>
+
+      <% if show_finish_button? %>
+        <%= button_tag "Terminé", name: "finish", value: "1", class: "button-secondary button-md" %>
+      <% end %>
+
+      <% if current_step == wizard_steps.last %>
+        <%= button_tag "Terminer", name: "next_step", class: "button-primary button-md w-full" %>
+      <% else %>
+        <%= button_tag "Suivant", name: "next_step", class: "button-primary button-md w-full" %>
+      <% end %>
+    </div>
+  </div>
+</div>

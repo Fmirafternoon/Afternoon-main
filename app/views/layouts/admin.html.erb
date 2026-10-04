@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html class="h-full bg-white">
+  <head>
+    <%= render "head" %>
+  </head>
+  <body class="antialiased h-full overlow-hidden bg-gray-50">
+    <div class="h-full relative flex-1 flex items-stretch overflow-hidden">
+      <div class="w-[270px]">
+        <%= render "navigation" %>
+      </div>
+      <div class="h-screen w-full bg-white flex flex-col overflow-hidden">
+        <main class="bg-white w-full flex flex-col overflow-hidden">
+          <%= render 'notifications', notice: notice, alert: alert %>
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

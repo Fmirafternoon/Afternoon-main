@@ -1,0 +1,980 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Profil Candidat",
+  "type": "object",
+  "properties": {
+    "last_updated_at": {
+      "type": ["string", "null"],
+      "description": "Date de dernière mise à jour du CV, au format AAAA-MM-JJ",
+      "x-instructions": [
+        "Déterminer la date de dernière mise à jour du CV d'après les infos visibles : date de la dernière expérience, de la dernière formation, etc.",
+        "Renvoyer au format AAAA-MM-JJ (ex: 2024-09-01). Mettre null si indéterminable"
+      ]
+    },
+      "first_name": {
+      "type": "string",
+      "description": "Prénom du candidat",
+      "x-instructions": [
+        "Extraire le prénom exact du candidat tel que mentionné dans le texte"
+      ]
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Nom de famille du candidat",
+      "x-instructions": [
+        "Extraire le nom de famille exact tel que mentionné dans le texte"
+      ]
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Adresse email du candidat",
+      "x-instructions": [
+        "Extraire l'adresse email professionnelle ou personnelle, une seule adresse email."
+      ]
+    },
+    "phone_number": {
+      "type": "string",
+      "description": "Numéro de téléphone",
+      "x-instructions": [
+        "Extraire le numéro au format international si possible"
+      ]
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female",
+        ""
+      ],
+      "description": "Genre du candidat",
+      "x-instructions": [
+        "Déterminer male ou female d'après le contexte ou laisser vide si non précisé"
+      ]
+    },
+    "birth_year": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Année de naissance du candidat",
+      "x-instructions": [
+        "Extraire directement l'année si mentionnée",
+        "Sinon, calculer à partir de l'âge indiqué"
+      ]
+    },
+    "address": {
+      "type": "string",
+      "description": "Adresse ou ville du candidat",
+      "x-instructions": [
+        "Extraire l'adresse complète ou au minimum la ville"
+      ]
+    },
+    "position": {
+      "type": "string",
+      "description": "Intitulé du poste recherché ou actuel",
+      "x-instructions": [
+        "Extraire l'intitulé du poste recherché ou actuel",
+        "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+      ]
+    },
+    "total_experience_in_years": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Nombre total d'années d'expérience",
+      "x-instructions": [
+        "Calculer à partir des dates d'emploi présentes dans le CV pour les emplois cohérents avec le poste recherché ou actuel"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "minLength": 300,
+      "description": "Description synthétique du profil",
+      "x-instructions": [
+        "Générer un résumé concis des points forts du candidat",
+        "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+      ]
+    },
+    "change_motivations": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Motivations pour changer d'entreprise",
+      "x-instructions": [
+        "Résumer en 1-2 phrases les raisons pour lesquelles le candidat souhaite changer d'entreprise",
+        "Utiliser les termes exacts du candidat lorsque c'est possible",
+        "Si non mentionné, laisser vide \"\"",
+        "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+      ]
+    },
+    "ongoing_applications": {
+      "type": "object",
+      "description": "Candidatures en cours",
+      "properties": {
+        "quantité": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Nombre de candidatures en cours",
+          "x-instructions": [
+            "Extraire le nombre de candidatures ou null si non précisé"
+          ]
+        },
+        "companies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Liste des entreprises pour les candidatures en cours",
+          "x-instructions": [
+            "Lister les entreprises pour les candidatures en cours, séparées par des virgules ou [] si aucun"
+          ]
+        }
+      }
+    },
+    "career_relevance": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Cohérence du parcours professionnel",
+      "x-instructions": [
+        "Résumé en 1-2 phrases de la progression et orientation de carrière",
+        "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+      ]
+    },
+    "has_driving_license": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Possession du permis de conduire",
+      "x-instructions": [
+        "Indiquer true si mentionné, false sinon, null si non spécifié"
+      ]
+    },
+    "has_a_car": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Possession d'un véhicule personnel",
+      "x-instructions": [
+        "Indiquer true si mentionné, false sinon, null si non spécifié"
+      ]
+    },
+    "availability_notice": {
+      "enum": [
+        "immediate",
+        "two_to_three_weeks",
+        "four_to_six_weeks",
+        "two_months",
+        "three_months",
+        "four_months_plus"
+      ],
+      "description": "Délai de disponibilité",
+      "x-instructions": [
+        "Déterminer l'option qui convient le mieux pour le candidat, immediate par défaut"
+      ]
+    },
+    "contract_type": {
+      "type": "string",
+      "enum": [
+        "cdi",
+        "cdd",
+        "interim",
+        ""
+      ],
+      "description": "Type de contrat souhaité",
+      "x-instructions": [
+        "Extraire cdi, cdd ou interim ou utiliser cdi par défaut"
+      ]
+    },
+    "salary_expectation": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Prétentions salariales annuelles en euros",
+      "x-instructions": [
+        "Extraire uniquement la valeur numérique de la rémunération annuelle brute souhaitée",
+        "Ne pas inclure d'unité (€) ou de format (K)",
+        "Exemple: 45000 (et non \"45000€\" ou \"45K€\")",
+        "Si une fourchette est mentionnée, prendre la valeur moyenne",
+        "Si non mentionné ou exprimé en mensuel, convertir en annuel (mensuel × 12)",
+        "Si aucune information disponible, utiliser null"
+      ]
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Nom principal de la compétence, trouver le nom le plus précis possible et le plus global"
+          },
+          "semantic": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste de termes liés ou synonymes permettant une recherche sémantique étendue",
+            "x-instructions": [
+              "Renseigner le tableau avec des variantes, synonymes, formulations courantes ou mots-clés associés du label principal de la compétence",
+              "Il peut y avoir entre 3 et 8 termes par compétence",
+              "Ne pas inclure de synonymes trop vagues ou trop éloignés : la sémantique doit être utile pour le matching, pas générer de faux positifs",
+              "Exemple : Pour 'gestion des équipes', fournir : ['management', 'encadrement', 'supervision d’équipe', 'leadership']",
+              "Exemple : Pour 'Photoshop', fournir : ['retouche photo', 'Adobe Photoshop', 'logiciel de création graphique']",
+              "Exemple : Pour 'Excel', fournir : ['tableur', 'spreadsheet', 'Feuille de calcul']"
+            ]
+          },
+ 
+
+           "seniority": {
+            "type": ["string", "null"],
+            "enum": ["junior", "intermediate", "confirmed", "expert", null],
+            "description": "Niveau de séniorité du candidat SUR CETTE compétence précise",
+            "x-instructions": [
+              "Déduire le niveau de maîtrise à partir de l'expérience et des responsabilités décrites dans le CV",
+              "junior = débutant ; intermediate = autonome ; confirmed = solide expérience et responsabilités ; expert = référent, très haute maîtrise",
+              "Mettre null si le CV ne permet pas de trancher"
+            ]
+          },
+          "experience": {
+            "type": ["string", "null"],
+            "description": "Résumé libre de l'expérience du candidat sur cette compétence (contexte, durée, réalisations)",
+            "x-instructions": [
+              "Résumer en 1 ou 2 phrases comment le candidat a utilisé cette compétence",
+              "Mettre null si aucune information exploitable"
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "semantic"
+        ]
+      },
+      "description": "Compétences clés du candidat",
+      "x-instructions": [
+        "Identifier et extraire toutes les compétences mentionnées dans les documents fournis du candidat",
+        "Pour chaque compétence, renseigner un tableau `semantic` contenant des variantes, synonymes, formulations courantes ou mots-clés associés (ex: Excel → Tableur, Feuille de calcul)",
+        "Prioriser les 3 compétences principales en tête de liste si elles correspondent au poste visé"
+      ]
+    },
+    "sectors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "integer"
+      },
+      "description": "Secteurs d'activités du candidat",
+      "x-instructions": [
+        "Extraire les [Secteurs d'activités] du candidat",
+        "Attention de bien faire remonter les id des secteurs d'activité que le candidat a mentionnés, il faut que cela soit pertinent"
+      ]
+    },
+    "employments": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Historique des emplois",
+      "x-instructions": [
+        "Pour chaque expérience, extraire titre, description, dates de début et fin, entreprise et localisation",
+        "Calculer la durée en mois"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Intitulé du poste",
+            "x-instructions": [
+              "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Responsabilités et réalisations",
+            "x-instructions": [
+              "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+            ]
+          },
+          "from": {
+            "type": "object",
+            "properties": {
+              "year": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "month": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 12
+              }
+            },
+            "required": [
+              "year"
+            ],
+            "description": "Date de début"
+          },
+          "to": {
+            "type": "object",
+            "properties": {
+              "year": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "month": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 12
+              }
+            },
+            "description": "Date de fin ou null si en cours"
+          },
+          "company": {
+            "type": "string",
+            "description": "Entreprise"
+          },
+          "location": {
+            "type": "string",
+            "description": "Localisation"
+          },
+          "duration_in_months": {
+            "type": "integer",
+            "description": "Durée en mois"
+          }
+        },
+        "required": [
+          "title",
+          "from",
+          "company"
+        ]
+      }
+    },
+    "educations": {
+      "type": "array",
+      "description": "Historique des formations",
+      "x-instructions": [
+        "Pour chaque formation, extraire intitulé, localisation, dates, établissement"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Intitulé du diplôme"
+          },
+          "location": {
+            "type": "string",
+            "description": "Localisation de l'établissement"
+          },
+          "from": {
+            "type": "object",
+            "properties": {
+              "year": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "month": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 12
+              }
+            },
+            "required": [
+              "year"
+            ],
+            "description": "Début de la formation"
+          },
+          "to": {
+            "type": "object",
+            "properties": {
+              "year": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "month": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 12
+              }
+            },
+            "description": "Fin de la formation"
+          },
+          "issuing_organization": {
+            "type": "string",
+            "description": "Organisme émetteur"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    "trainings": {
+      "type": "array",
+      "description": "Diplômes et certifications",
+      "x-instructions": [
+        "Pour chaque diplôme ou certification, extraire l'année, l'organisme et la description"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "issuing_organization": {
+            "type": "string",
+            "description": "Organisme émetteur"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de la certification"
+          }
+        },
+        "required": [
+          "issuing_organization"
+        ]
+      }
+    },
+    "languages": {
+      "type": "array",
+      "description": "Langues parlées",
+      "x-instructions": [
+        "Pour chaque langue, extraire le code ISO et le niveau CECRL"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Code ISO (fr, en, es…)"
+          },
+          "level": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "A1",
+              "A2",
+              "B1",
+              "B2",
+              "C1",
+              "C2",
+              null
+            ],
+            "description": "Niveau CECRL"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      }
+    },
+    "references": {
+      "type": "array",
+      "description": "Références professionnelles",
+      "x-instructions": [
+        "Pour chaque référence, extraire nom, téléphone, email, entreprise, poste et description de la relation"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "description": "Nom complet"
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "Téléphone au format international si possible"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email"
+          },
+          "company": {
+            "type": "string",
+            "description": "Entreprise"
+          },
+          "position": {
+            "type": "string",
+            "description": "Poste occupé"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de la relation professionnelle"
+          }
+        },
+        "required": [
+          "full_name"
+        ]
+      }
+    },
+    "candidate_mobilities": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Mobilités du candidat",
+      "x-instructions": [
+        "Extraire toutes les mobilités du candidat, par défaut sa ville de résidence"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "Ville"
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "Code postal"
+          }
+        }
+      }
+    },
+    "red_flags": {
+      "type": "object",
+      "description": "Points d'attention",
+      "x-instructions": [
+        "Extraire le score et la question pour chaque critère tel que mentionné",
+        "Pour chaque critère, vous devez attribuer une valeur binaire :",
+        "- 0 : Le critère est validé, aucune question nécessaire",
+        "- 1 : Le critère nécessite un éclaircissement, une question doit être posée au recruteur",
+        "Réécrire l'instruction de la question en prenant en compte le contexte du candidat et en remplaçant les variables entourées par des crochets par les valeurs du candidat"
+      ],
+      "properties": {
+        "career_stability": {
+          "type": "object",
+          "description": "Stabilité professionnelle",
+          "x-instructions": [
+            "Extraire toutes les expériences professionnelles des 6 dernières années",
+            "Compter le nombre d'employeurs distincts",
+            "Calculer le ratio durée/nombre d'employeurs"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Maximum 1 changement d'entreprise sur les 6 dernières années",
+                "1 : Plus d'1 changement d'entreprise sur les 6 dernières années"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le candidat a changé [X] fois d'entreprise en 6 ans. Pouvez-vous préciser les raisons de ces changements fréquents et si cela correspond à des pratiques habituelles dans son secteur ?",
+                "Remplacer les variables entre crochets par les valeurs du candidat"
+              ]
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        },
+        "carreer_continuity": {
+          "type": "object",
+          "description": "Continuité de parcours",
+          "x-instructions": [
+            "Identifier chronologiquement toutes les expériences",
+            "Calculer les intervalles entre chaque expérience",
+            "Repérer les périodes sans activité professionnelle"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Aucune période d'inactivité supérieure à 5 mois",
+                "1 : Présence d'au moins une période d'inactivité supérieure à 5 mois"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le CV présente une période d'inactivité de X mois entre [date] et [date]. Disposez-vous d'informations sur cette période (formation, projet personnel, raisons de santé) ?",
+                "Remplacer les variables entre crochets par les valeurs du candidat"
+              ]
+            }
+          }
+        },
+        "career_consistency": {
+          "type": "object",
+          "description": "Cohérence du projet professionnel",
+          "x-instructions": [
+            "Extraire le titre du poste recherché",
+            "Extraire le titre du dernier poste occupé",
+            "Comparer les similarités lexicales et sémantiques entre ces titres"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Similarité forte entre le poste recherché et le dernier poste",
+                "1 : Faible similarité ou changement significatif d'orientation"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le candidat postule pour [poste recherché] alors que son dernier poste était [dernier poste]. Avez-vous des éléments sur cette réorientation et les compétences transférables qu'il possède ?",
+                "Remplacer les variables entre crochets par les valeurs du candidat"
+              ]
+            }
+          }
+        },
+        "qualifications_and_certifications": {
+          "type": "object",
+          "description": "Qualifications et certifications",
+          "x-instructions": [
+            "Extraire toutes les certifications, habilitations et diplômes mentionnés",
+            "Vérifier la présence des qualifications requises pour le secteur concerné",
+            "Contrôler les dates de validité lorsqu'elles sont mentionnées"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Présence de toutes les qualifications requises avec dates de validité cohérentes",
+                "1 : Absence d'une ou plusieurs qualifications clés ou dates expirées"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le candidat ne mentionne pas [qualification manquante] dans son CV. Pourriez-vous expliciter ses diplômes et qualifications ?",
+                "Remplacer les variables entre crochets par les valeurs du candidat"
+              ]
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        },
+        "sector_experience": {
+          "type": "object",
+          "description": "Expérience sectorielle",
+          "x-instructions": [
+            "Identifier les expériences spécifiques au secteur concerné",
+            "Calculer le nombre total d'années dans le secteur",
+            "Évaluer la pertinence de ces expériences par rapport au poste visé"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Minimum 3 ans d'expérience pertinente dans le secteur concerné",
+                "1 : Moins de 3 ans ou expérience périphérique"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le candidat présente X années d'expérience dans [secteur], principalement dans [spécialité]. Est-ce suffisant pour le poste recherché ?",
+                "Remplacer les variables entre crochets par les valeurs du candidat"
+              ]
+            }
+          }
+        },
+        "specific_technical_skills": {
+          "type": "object",
+          "description": "Compétences techniques spécifiques",
+          "x-instructions": [
+            "Extraire la liste des compétences techniques mentionnées",
+            "Comparer avec les compétences essentielles pour le poste visé",
+            "Évaluer la pertinence de ces compétences techniques par rapport au poste visé",
+            "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Maîtrise des principaux outils requis pour le poste visé",
+                "1 : Absence d'outils essentiels"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le candidat ne mentionne pas la maîtrise de [outil/technologie], qui est couramment utilisé pour ce type de poste. Est-ce un prérequis absolu ou existe-t-il des alternatives acceptables ?"
+              ]
+            }
+          }
+        },
+        "career_progression": {
+          "type": "object",
+          "description": "Progression de carrière",
+          "x-instructions": [
+            "Tracer l'évolution des responsabilités et postes occupés",
+            "Évaluer la progression hiérarchique (croissante, stable, décroissante)",
+            "Noter les sauts atypiques (changements rapides de niveau)"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Progression cohérente et régulière ou stabilité à un niveau expert",
+                "1 : Régression hiérarchique ou stagnation prolongée"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le parcours du candidat montre [une régression/une stagnation] dans ses responsabilités depuis [période]. Avez-vous discuté avec lui de ce choix de carrière et de ses aspirations actuelles ?"
+              ]
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        },
+        "technical_skills_mastery": {
+          "type": "object",
+          "description": "Maîtrise des outils et technologies",
+          "x-instructions": [
+            "Identifier tous les logiciels, outils et technologies mentionnés",
+            "Vérifier la présence des outils spécifiques au secteur et au poste",
+            "Noter les niveaux de maîtrise lorsqu'ils sont indiqués"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "question": {
+              "type": "string"
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        },
+        "references": {
+          "type": "object",
+          "description": "Références professionnelles",
+          "x-instructions": [
+            "Identifier les références ou projets significatifs mentionnés",
+            "Vérifier la pertinence par rapport au secteur et au poste",
+            "Noter les entreprises de référence dans le secteur"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Présence de références vérifiables et pertinentes",
+                "1 : Absence de références ou références peu pertinentes"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le CV ne mentionne pas de références professionnelles spécifiques. Avez-vous prévu de demander des recommandations de ses précédents employeurs ?"
+              ]
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        },
+        "salary_adequacy": {
+          "type": "object",
+          "description": "Adéquation salariale",
+          "x-instructions": [
+            "Identifier toute mention de prétentions salariales",
+            "Estimer le niveau de rémunération probable selon l'expérience",
+            "Comparer les prétentions avec la rémunération probable selon l'expérience"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Cohérence entre niveau d'expérience et fourchette salariale du poste",
+                "1 : Écart significatif probable"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Compte tenu de l'expérience du candidat comme [dernier poste] chez [entreprise], la rémunération proposée pour ce poste correspond-elle à ses attentes probables ?"
+              ]
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        },
+        "commercial_performance": {
+          "type": "object",
+          "description": "Performance commerciale (pour les profils commerciaux)",
+          "x-instructions": [
+            "Identifier les mentions de résultats chiffrés (CA, objectifs atteints)",
+            "Vérifier la progression des performances",
+            "Noter les méthodes commerciales mentionnées"
+          ],
+          "properties": {
+            "score": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "x-instructions": [
+                "0 : Résultats commerciaux quantifiés et cohérents ou le candidat n'est pas commercial",
+                "1 : Absence de résultats chiffrés ou performances en baisse"
+              ]
+            },
+            "question": {
+              "type": "string",
+              "x-instructions": [
+                "Le CV ne mentionne pas de résultats commerciaux précis. Disposez-vous d'informations sur ses performances de vente et son taux de conversion ?"
+              ]
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Indique si le critère est optionnel",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "resume_summary": {
+      "type": "object",
+      "description": "Synthèse du compte-rendu d'entretien",
+      "x-instructions": [
+        "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+      ],
+      "properties": {
+        "skills": {
+          "type": "string",
+          "description": "Savoir-faire du candidat",
+          "x-instructions": [
+            "Résumer en 2-3 phrases les compétences principales et expertises du candidat",
+            "Privilégier les compétences liées au poste visé",
+            "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+          ]
+        },
+        "accomplishments": {
+          "type": "string",
+          "description": "Accomplissements significatifs",
+          "x-instructions": [
+            "Extraire 1-3 accomplissements professionnels significatifs mentionnés par le candidat",
+            "Privilégier les réalisations quantifiables (chiffres, pourcentages, impacts mesurables)",
+            "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+          ]
+        },
+        "management": {
+          "type": "string",
+          "description": "Expérience en management",
+          "x-instructions": [
+            "Résumer l'expérience en management du candidat: taille des équipes, style de management, responsabilités",
+            "Si le candidat n'a pas d'expérience en management, indiquer 'Pas d'expérience en management'",
+            "Ne pas écrire de données personnelles : nom, prénom, adresse complète, numéro de téléphone et email, ou même de nom d'entreprise"
+          ]
+        },
+        "specializations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Spécialisations",
+          "x-instructions": [
+            "Lister les domaines d'expertise spécifiques du candidat (max 5)"
+          ]
+        },
+        "security_qualifications": {
+          "type": "array",
+          "description": "Qualifications sécurité",
+          "items": {
+            "type": "string"
+          },
+          "x-instructions": [
+            "Lister les certifications, habilitations ou formations liées à la sécurité"
+          ]
+        },
+        "tools_and_technologies": {
+          "type": "array",
+          "description": "Outils et technologies",
+          "items": {
+            "type": "string"
+          },
+          "x-instructions": [
+            "Lister les logiciels, plateformes, langages de programmation ou autres outils techniques maîtrisés"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "position",
+    "description",
+    "employments",
+    "skills",
+    "candidate_mobilities"
+  ]
+}

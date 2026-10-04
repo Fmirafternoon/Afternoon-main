@@ -1,0 +1,88 @@
+<h2 style="margin: 0 0 20px; color: #092E46; font-size: 20px; font-weight: 600;">
+  Nouveau projet à pourvoir près de chez vous
+</h2>
+
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Bonjour <%= @agent.first_name %>,
+</p>
+
+<p style="margin: 0 0 20px; color: #333; font-size: 14px; line-height: 1.5;">
+  Une entreprise proche de votre agence vient de publier un projet de recrutement
+  sur Afternoon. Si vous avez des candidats correspondants, c'est le moment de les proposer !
+</p>
+
+<!-- Le client -->
+<div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 12px; color: #092E46; font-weight: 600; font-size: 15px;">
+    Le client
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Entreprise :</strong> <%= @project.client_name %>
+  </p>
+  <% if @project.location&.city %>
+    <p style="margin: 0; color: #333; font-size: 14px;">
+      <strong>Localisation :</strong> <%= @project.location.city %>
+    </p>
+  <% end %>
+</div>
+
+<!-- Le projet -->
+<div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 12px; color: #092E46; font-weight: 600; font-size: 15px;">
+    Le projet
+  </p>
+  <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+    <strong>Poste :</strong> <%= @project.position_name %>
+  </p>
+  <% if @project.contract_type.present? %>
+    <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+      <strong>Contrat :</strong> <%= @project.contract_type.upcase %>
+    </p>
+  <% end %>
+  <% if @project.start_date.present? %>
+    <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+      <strong>Date de début :</strong> <%= l(@project.start_date, format: :long) %>
+    </p>
+  <% end %>
+  <% if @project.skills.any? %>
+    <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+      <strong>Compétences recherchées :</strong> <%= @project.skills.pluck(:name).join(", ") %>
+    </p>
+  <% end %>
+  <% if @project.min_experience_years.present? %>
+    <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+      <strong>Expérience :</strong> <%= @project.min_experience_years %>+ ans minimum
+    </p>
+  <% end %>
+  <% if @project.target_salary.present? %>
+    <p style="margin: 0 0 8px; color: #333; font-size: 14px;">
+      <strong>Salaire cible :</strong> <%= number_to_currency(@project.target_salary, unit: "EUR", format: "%n %u", precision: 0) %> brut/an
+    </p>
+  <% end %>
+  <% if @project.desired_availability.present? %>
+    <p style="margin: 0; color: #333; font-size: 14px;">
+      <strong>Disponibilité souhaitée :</strong> <%= t("enums.project.desired_availability.#{@project.desired_availability}") %>
+    </p>
+  <% end %>
+</div>
+
+<!-- C'est quoi Afternoon ? -->
+<p style="margin: 24px 0 8px; color: #092E46; font-weight: 600; font-size: 15px;">
+  C'est quoi Afternoon ?
+</p>
+<p style="margin: 0 0 16px; color: #333; font-size: 14px; line-height: 1.5;">
+  Afternoon est la plateforme qui connecte les entreprises qui recrutent avec les
+  agences de recrutement. Importez les CV de vos candidats : ils sont automatiquement
+  proposés aux projets qui leur correspondent, et vous êtes notifié à chaque match.
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
+  <tr>
+    <td align="center">
+      <a href="<%= root_url %>"
+         style="display: inline-block; background-color: #E5E500; color: #092E46; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+        Découvrir Afternoon
+      </a>
+    </td>
+  </tr>
+</table>

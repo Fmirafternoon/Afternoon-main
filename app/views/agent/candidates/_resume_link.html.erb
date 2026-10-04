@@ -1,0 +1,9 @@
+<%= link_to candidate.resume_url, class: "button-ghost w-full items-start justify-start", target: "_blank" do %>
+  <%= inline_svg_tag "icons/resume.svg", class: "w-4" %>
+  <div>
+    <%= candidate.resume_file_name %>
+    <p class="text-gray-500 text-xs">
+      Ajouté le <%= candidate.created_at.strftime("%d/%m/%Y") %>
+    </p>
+  </div>
+<% end %>

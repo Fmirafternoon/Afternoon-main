@@ -1,0 +1,8 @@
+<span class="inline-flex items-center gap-x-1.5 rounded-full <%= classes %> <%= padding %> py-1 text-xs font-medium">
+  <% if svg.present? %>
+    <%= inline_svg_tag(svg, class: "shrink-0 h-4 W-4 opacity-50") %>
+  <% end %>
+  <div class="grow">
+    <%= label %>
+  </div>
+</span>

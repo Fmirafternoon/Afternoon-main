@@ -1,0 +1,49 @@
+<div class="container mx-auto px-4">
+  <div class="flex justify-between items-center mb-6">
+    <%= link_to customer_candidates_path, class: "button-link button-md" do %>
+      <%= inline_svg_tag "icons/arrow-left.svg", class: "w-4 sm:w-5" %>
+      Retour à la recherche
+    <% end %>
+  </div>
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="title-3">Ma shortlist</h1>
+
+    <div class="button-group">
+      <%= active_link_to "En attente", customer_basket_path, class: "", active: { status: nil } %>
+      <%= active_link_to "RDV pris", customer_basket_path(status: "meeting_requested"), class: "", active: { status: "meeting_requested" } %>
+    </div>
+  </div>
+
+  <% if @basket_items.empty? %>
+    <div class="text-center py-12 bg-mute-200 rounded-2xl">
+      <div class="mb-4">
+        <% if @status == "meeting_requested" %>
+          <%= inline_svg_tag "icons/calendar.svg", class: "w-16 h-16 mx-auto text-black" %>
+        <% else %>
+          <%= inline_svg_tag "icons/podium.svg", class: "w-16 h-16 mx-auto text-black" %>
+        <% end %>
+      </div>
+      <p class="paragraph-lg text-mute-800 mb-4">
+        <% case @status %>
+        <% when "meeting_requested" %>
+          Aucun rendez-vous demandé pour le moment
+        <% when "all" %>
+          Votre shortlist est vide
+        <% else %>
+          Aucun candidat en attente
+        <% end %>
+      </p>
+      <%= link_to customer_candidates_path, class: "button-primary button-md" do %>
+        <%= inline_svg_tag "icons/search.svg", class: "w-5 h-5" %>
+        Rechercher des candidats
+      <% end %>
+    </div>
+  <% else %>
+    <div class="space-y-6">
+      <% @basket_items.each do |basket_item| %>
+        <%= render "customer/baskets/basket_item", basket_item: basket_item %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

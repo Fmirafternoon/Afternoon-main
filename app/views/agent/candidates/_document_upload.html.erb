@@ -1,0 +1,20 @@
+<%= turbo_frame_tag "document-upload" do %>
+  <div data-controller="document-upload"
+        data-document-upload-candidate-id-value="<%= candidate.id %>"
+        class="block flex flex-col gap-y-4">
+    <div class="flex flex-col space-y-1.5" id="uploads" data-document-upload-target="upload"></div>
+    <div data-document-upload-target="dropzone" class="w-full flex flex-col items-center space-y-2 rounded-3xl border-mute-500 border-dashed border px-4 py-8 text-center cursor-pointer">
+      <div>
+        <%= inline_svg_tag "icons/upload.svg", class: "w-8" %>
+      </div>
+      <div class="pb-2">
+        <div class="label-md">Glissez déposez un Document</div>
+        <div class="paragraph-xs">Formats acceptés : .pdf</div>
+      </div>
+      <div class="button">Choisir un fichier</div>
+    </div>
+    <template data-upload-item-template>
+      <%= render partial: "agent/candidates/upload", locals: { candidate: Candidate.new(import_status: :uploading) } %>
+    </template>
+  </div>
+<% end %>
